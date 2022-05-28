@@ -57,15 +57,15 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Selection")
 	bool bHovered;
 
-	UPROPERTY(EditDefaultsOnly, Category = "Selection Settings")
+	UPROPERTY(EditAnywhere, Category = "Selection Settings")
 	UMaterialInterface* SelectionCircleMaterial;
 
-	UPROPERTY(EditDefaultsOnly, Category = "Selection Settings")
+	UPROPERTY(EditAnywhere, Category = "Selection Settings")
 	UStaticMesh* PlaneMesh;
 
 	UPROPERTY()
 	UStaticMeshComponent* PlaneComponent;
 
-	UPROPERTY(EditDefaultsOnly, Category = "Selection Settings")
+	UPROPERTY(EditAnywhere, Category = "Selection Settings")
 	USoundCue* SelectedSound;
 };

@@ -24,13 +24,16 @@ protected:
 	virtual void BeginPlay() override;
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
-	class UBoxComponent* BoxComponent;
+	class USphereComponent* SphereComponent;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	UStaticMeshComponent* MeshComponent;
 
-	FStarSystemData* StarSystemData;
-
-	UPROPERTY(Transient)
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	class USelectionComponent* SelectionComponent;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
+	class UNameComponent* NameComponent;
+	
+	FStarSystemData* StarSystemData;
 };
