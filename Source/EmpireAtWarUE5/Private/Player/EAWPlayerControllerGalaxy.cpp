@@ -44,18 +44,27 @@ void AEAWPlayerControllerGalaxy::PlayerTick(float DeltaTime)
 
 void AEAWPlayerControllerGalaxy::EnhancedStartPrimaryAction(const FInputActionValue& Value)
 {
-	if (bZoomInProgress) return;
+	if (bZoomInProgress)
+	{
+		return;
+	}
 	SelectActor();
 }
 
 void AEAWPlayerControllerGalaxy::EnhancedZoomCamera(const FInputActionValue& Value)
 {
-	if (bZoomInProgress) return;
+	if (bZoomInProgress)
+	{
+		return;
+	}
 	if (IsValid(GetActorUnderCursor()))
 	{
 		SelectActor();
 	}
-	else if (!IsValid(SelectedActor)) return;
+	else if (!IsValid(SelectedActor))
+	{
+		return;
+	}
 	PlayerPawn->SetCameraLagEnabled(false);
 
 	bIsZoomed = Value[0] > 0;
@@ -82,7 +91,10 @@ void AEAWPlayerControllerGalaxy::SelectActor()
 
 void AEAWPlayerControllerGalaxy::SetSelectionVisibility(bool Visible)
 {
-	if (!IsValid(SelectedActor)) return;
+	if (!IsValid(SelectedActor))
+	{
+		return;
+	}
 	if (USelectionComponent* SelectionComponent = SelectedActor->FindComponentByClass<USelectionComponent>())
 	{
 		Visible ? SelectionComponent->OnSelected.Broadcast() : SelectionComponent->OnDeselected.Broadcast();

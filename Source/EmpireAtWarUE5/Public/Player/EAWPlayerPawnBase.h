@@ -35,7 +35,7 @@ public:
 	float MinDistance;
 
 	UPROPERTY(EditAnywhere, meta = (ClampMin = 0))
-	float MaxDistance ;
+	float MaxDistance;
 
 	UPROPERTY(EditAnywhere, meta = (ClampMin = 0))
 	float CurrentZoom;

@@ -7,14 +7,11 @@
 #include "Components/TextBlock.h"
 #include "NameWidget.generated.h"
 
-/**
- * 
- */
 UCLASS()
 class EMPIREATWARUE5_API UNameWidget : public UUserWidget
 {
 	GENERATED_BODY()
-	
+
 public:
 	FORCEINLINE void SetName(FText Name) { TextBlock->SetText(Name); };
 

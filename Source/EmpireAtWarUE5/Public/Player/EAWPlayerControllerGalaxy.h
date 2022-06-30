@@ -16,7 +16,7 @@ UCLASS()
 class EMPIREATWARUE5_API AEAWPlayerControllerGalaxy : public AEAWPlayerControllerBase
 {
 	GENERATED_BODY()
-	
+
 public:
 	FORCEINLINE AActor* GetSelectedActor() const { return SelectedActor; };
 
@@ -58,7 +58,7 @@ private:
 
 	UPROPERTY()
 	FTimeline CurveTimeline;
-	
+
 	FOnTimelineFloatStatic OnTimelineProgress;
 	FOnTimelineEventStatic OnTimelineFinished;
 };

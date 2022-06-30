@@ -15,5 +15,4 @@ UCLASS()
 class EMPIREATWARUE5_API ACameraBoundsVolume : public AVolume
 {
 	GENERATED_BODY()
-	
 };

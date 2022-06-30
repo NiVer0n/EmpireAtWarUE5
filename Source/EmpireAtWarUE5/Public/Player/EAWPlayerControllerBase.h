@@ -35,7 +35,7 @@ protected:
 	virtual void SetupInputComponent() override;
 	virtual void OnPossess(APawn* InPawn) override;
 	virtual void PlayerTick(float DeltaTime) override;
-	virtual void EnhancedStartPrimaryAction(const FInputActionValue& Value) {};
+	virtual void EnhancedStartPrimaryAction(const FInputActionValue& Value){};
 	virtual void EnhancedZoomCamera(const FInputActionValue& Value);
 	virtual void UpdateCameraZoom(float DeltaTime);
 

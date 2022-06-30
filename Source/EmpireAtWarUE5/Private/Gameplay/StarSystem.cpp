@@ -21,7 +21,9 @@ AStarSystem::AStarSystem()
 void AStarSystem::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
+	check(StarSystemData);
+
 	MeshComponent->SetStaticMesh(StarSystemData->Mesh.Get());
 	UNameWidget* NameWidget = Cast<UNameWidget>(NameComponent->GetUserWidgetObject());
 	ensure(NameWidget);

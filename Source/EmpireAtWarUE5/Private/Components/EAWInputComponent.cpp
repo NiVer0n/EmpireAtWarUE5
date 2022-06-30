@@ -64,7 +64,7 @@ void UEAWInputComponent::InitializeComponent()
 	Super::InitializeComponent();
 
 	PawnMappingContext = NewObject<UInputMappingContext>(this);
-	
+
 	MovementAction = NewObject<UInputAction>(this);
 	MovementAction->ValueType = EInputActionValueType::Axis2D;
 	MapKey(PawnMappingContext, MovementAction, EKeys::W, {}, { EInputModifierType::SwizzleInputAxisValues });

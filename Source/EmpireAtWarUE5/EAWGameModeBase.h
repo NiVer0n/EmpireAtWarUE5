@@ -13,7 +13,7 @@ UCLASS()
 class EMPIREATWARUE5_API AEAWGameModeBase : public AGameModeBase
 {
 	GENERATED_BODY()
-	
+
 protected:
 	AEAWGameModeBase(const FObjectInitializer& ObjectInitializer);
 };

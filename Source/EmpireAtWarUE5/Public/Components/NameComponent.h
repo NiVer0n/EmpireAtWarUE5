@@ -6,7 +6,7 @@
 #include "Components/WidgetComponent.h"
 #include "NameComponent.generated.h"
 
-UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
+UCLASS(ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
 class EMPIREATWARUE5_API UNameComponent : public UWidgetComponent
 {
 	GENERATED_BODY()

@@ -6,9 +6,6 @@
 #include "Subsystems/WorldSubsystem.h"
 #include "UniverseSubsystem.generated.h"
 
-class AStarSystem;
-class UDataTable;
-
 /**
  * Generic class for storing and spawning celestial bodies.
  */
@@ -23,7 +20,6 @@ public:
 protected:
 	UUniverseSubsystem();
 
-	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
 	virtual void OnWorldBeginPlay(UWorld& InWorld) override;
 
 	void CreateUniverse();
@@ -32,10 +28,10 @@ protected:
 	bool bShouldBeCreated;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Data")
-	UDataTable* UniverseData;
+	class UDataTable* UniverseData;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Data")
-	TSubclassOf<AStarSystem> StarSystemClass;
+	TSubclassOf<class AStarSystem> StarSystemClass;
 
 	UPROPERTY(Transient)
 	TMap<FName, AActor*> UniverseMap;

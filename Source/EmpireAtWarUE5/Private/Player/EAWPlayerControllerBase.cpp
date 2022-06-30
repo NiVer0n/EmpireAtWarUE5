@@ -12,14 +12,14 @@
 
 AEAWPlayerControllerBase::AEAWPlayerControllerBase(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
+	, PlayerPawn(nullptr)
+	, CameraSettings(FCameraSettings())
+	, CameraBoundsVolume(nullptr)
+	, bIsMovementEnabled(true)
+	, CameraMovementAxisValue(FVector2D::ZeroVector)
+	, CameraZoomAxisValue(0.0f)
+	, SelectionStartPoint(FVector2D::ZeroVector)
 {
-	PlayerPawn = nullptr;
-	CameraSettings = FCameraSettings();
-	CameraBoundsVolume = nullptr;
-	bIsMovementEnabled = true;
-	CameraMovementAxisValue = FVector2D::ZeroVector;
-	CameraZoomAxisValue = 0.0f;
-	SelectionStartPoint = FVector2D::ZeroVector;
 }
 
 void AEAWPlayerControllerBase::SetupInputComponent()
@@ -37,7 +37,7 @@ void AEAWPlayerControllerBase::SetupInputComponent()
 	check(Subsystem && EAWInputComponent);
 	Subsystem->ClearAllMappings();
 	Subsystem->AddMappingContext(EAWInputComponent->GetMappingContext(), 0);
-	
+
 	EAWInputComponent->BindAction(EAWInputComponent->GetMovementAction(), ETriggerEvent::Triggered, this, &AEAWPlayerControllerBase::EnhancedMove);
 	EAWInputComponent->BindAction(EAWInputComponent->GetMouseAction(), ETriggerEvent::Started, this, &AEAWPlayerControllerBase::EnhancedStartPrimaryAction);
 	EAWInputComponent->BindAction(EAWInputComponent->GetZoomAction(), ETriggerEvent::Triggered, this, &AEAWPlayerControllerBase::EnhancedZoomCamera);
@@ -76,7 +76,10 @@ void AEAWPlayerControllerBase::EnhancedZoomCamera(const FInputActionValue& Value
 
 void AEAWPlayerControllerBase::UpdateCameraMovement(float DeltaTime)
 {
-	if (!bIsMovementEnabled) return;
+	if (!bIsMovementEnabled)
+	{
+		return;
+	}
 
 	FVector2D ViewportSize, ScrollBorder;
 	ViewportSize = FVector2D(GEngine->GameViewport->Viewport->GetSizeXY());
@@ -121,7 +124,10 @@ void AEAWPlayerControllerBase::UpdateCameraMovement(float DeltaTime)
 
 void AEAWPlayerControllerBase::UpdateCameraZoom(float DeltaTime)
 {
-	if (CameraSettings.CurrentZoom == CameraSettings.DesiredZoom) return;
+	if (CameraSettings.CurrentZoom == CameraSettings.DesiredZoom)
+	{
+		return;
+	}
 	CameraSettings.CurrentZoom = FMath::FInterpTo(CameraSettings.CurrentZoom, CameraSettings.DesiredZoom, DeltaTime, CameraSettings.ZoomSpeed);
 	PlayerPawn->SetTargetArmLength(CameraSettings.CurrentZoom);
 }
@@ -129,8 +135,11 @@ void AEAWPlayerControllerBase::UpdateCameraZoom(float DeltaTime)
 FVector AEAWPlayerControllerBase::GetMousePositionInWorldSpace()
 {
 	FVector WorldLocation, WorldDirection;
-	if (!DeprojectMousePositionToWorld(WorldLocation, WorldDirection)) return FVector();
-	return WorldLocation - WorldDirection * (WorldLocation.Z / WorldDirection.Z);
+	if (DeprojectMousePositionToWorld(WorldLocation, WorldDirection))
+	{
+		return WorldLocation - WorldDirection * (WorldLocation.Z / WorldDirection.Z);
+	}
+	return FVector();
 }
 
 FVector2D AEAWPlayerControllerBase::GetCurrentMousePosition()
