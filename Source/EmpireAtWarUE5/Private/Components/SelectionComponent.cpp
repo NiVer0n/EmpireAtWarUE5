@@ -1,14 +1,16 @@
 // NiVeron Games 2022. All rights reserved.
 
 #include "Components/SelectionComponent.h"
+#include "Subsystems/FactionsSubsystem.h"
+#include "Utils/SubsystemUtils.h"
+#include "Kismet/GameplayStatics.h"
 
 USelectionComponent::USelectionComponent()
 	: Owner(nullptr)
 	, bCanBeSelected(true)
-	, bSelected(false)
+	, bIsSelected(false)
 	, bHovered(false)
 {
-
 }
 
 void USelectionComponent::BeginPlay()
@@ -16,46 +18,41 @@ void USelectionComponent::BeginPlay()
 	Super::BeginPlay();
 
 	Owner = GetOwner();
-	checkf(IsValid(Owner), TEXT("USelectionComponent::BeginPlay(): Owner is not valid!"))
-	
-	OnSelected.AddDynamic(this, &USelectionComponent::SelectOwner);
-	OnDeselected.AddDynamic(this, &USelectionComponent::DeselectOwner);
-	
-	ensureMsgf(IsValid(PlaneMesh), TEXT("USelectionComponent::BeginPlay(): PlaneMesh is not set."));
+	checkf(IsValid(Owner), TEXT("USelectionComponent::BeginPlay(): Owner is invalid!"));
+
+	OnSetSelected.AddDynamic(this, &USelectionComponent::SetOwnerSelected);
+
+	ensureMsgf(IsValid(PlaneMesh), TEXT("USelectionComponent::BeginPlay(): PlaneMesh isn't set."));
 	PlaneComponent = NewObject<UStaticMeshComponent>(Owner, TEXT("SelectionCirclePlane"));
 	PlaneComponent->AttachToComponent(Owner->GetRootComponent(), FAttachmentTransformRules::KeepRelativeTransform);
 	PlaneComponent->SetStaticMesh(PlaneMesh);
 	PlaneComponent->SetRelativeScale3D(FVector(2.0f));
-	UMaterialInstanceDynamic* SelectionCircleMaterialInstance = UMaterialInstanceDynamic::Create(SelectionCircleMaterial, this);
+	SelectionCircleMaterialInstance = UMaterialInstanceDynamic::Create(SelectionCircleMaterial, this);
 	PlaneComponent->SetMaterial(0, SelectionCircleMaterialInstance);
 	PlaneComponent->SetHiddenInGame(true);
 	PlaneComponent->RegisterComponent();
 }
 
-void USelectionComponent::DestroyComponent(bool bPromoteChildren)
+void USelectionComponent::SetOwnerSelected(bool bInSelected)
 {
-	Super::DestroyComponent(bPromoteChildren);
+	if (bIsSelected == bInSelected)
+	{
+		return;
+	}
+	bIsSelected = bInSelected;
 
-	if (!IsValid(PlaneComponent)) return;
-	PlaneComponent->DestroyComponent();
-}
+	if (IsValid(PlaneComponent))
+	{
+		PlaneComponent->SetHiddenInGame(!bInSelected);
+	}
 
-void USelectionComponent::SelectOwner()
-{
-	if (!bCanBeSelected || bSelected) return;
-
-	bSelected = true;
-
-	if (!IsValid(PlaneComponent)) return;
-	PlaneComponent->SetHiddenInGame(false);
-}
-
-void USelectionComponent::DeselectOwner()
-{
-	if (!bSelected) return;
-
-	bSelected = false;
-
-	if (!IsValid(PlaneComponent)) return;
-	PlaneComponent->SetHiddenInGame(true);
+	UFactionsSubsystem* FactionsSubsystem = USubsystemUtils::GetFactionsSubsystem(GetWorld());
+	const FGameplayTag OwnerFactionTag = FactionsSubsystem->GetGameObjectsFactions().FindRef(Owner);
+	const APlayerController* PlayerController = UGameplayStatics::GetPlayerController(GetWorld(), 0);
+	check(PlayerController);
+	const FGameplayTag PlayerFactionTag = FactionsSubsystem->GetPlayerFactions().FindRef(PlayerController);
+	if (OwnerFactionTag.IsValid() && PlayerFactionTag.IsValid())
+	{
+		SelectionCircleMaterialInstance->SetVectorParameterValue(TEXT("Color"), FactionsSubsystem->GetFactionColor(PlayerFactionTag, OwnerFactionTag));
+	}
 }

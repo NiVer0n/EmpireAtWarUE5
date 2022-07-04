@@ -5,10 +5,12 @@
 #include "Components/SelectionComponent.h"
 #include "Components/NameComponent.h"
 #include "UI/NameWidget.h"
+#include "Utils/SubsystemUtils.h"
+#include "Subsystems/FactionsSubsystem.h"
 
 AStarSystem::AStarSystem()
 {
-	SphereComponent = CreateDefaultSubobject<USphereComponent>(TEXT("BoxComponent"));
+	SphereComponent = CreateDefaultSubobject<USphereComponent>(TEXT("SphereComponent"));
 	SetRootComponent(SphereComponent);
 	MeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Mesh"));
 	MeshComponent->SetupAttachment(RootComponent);
@@ -22,10 +24,14 @@ void AStarSystem::BeginPlay()
 {
 	Super::BeginPlay();
 
-	check(StarSystemData);
-
 	MeshComponent->SetStaticMesh(StarSystemData->Mesh.Get());
-	UNameWidget* NameWidget = Cast<UNameWidget>(NameComponent->GetUserWidgetObject());
-	ensure(NameWidget);
+	UNameWidget* NameWidget = CastChecked<UNameWidget>(NameComponent->GetUserWidgetObject());
 	NameWidget->SetName(StarSystemData->Name);
+	UFactionsSubsystem* FactionsSubsystem = USubsystemUtils::GetFactionsSubsystem(GetWorld());
+	FactionsSubsystem->GetGameObjectsFactions().Add(this, StarSystemData->FactionControl);
+}
+
+void AStarSystem::SetNameVisibility(bool InVisible)
+{
+	NameComponent->SetVisibility(InVisible);
 }

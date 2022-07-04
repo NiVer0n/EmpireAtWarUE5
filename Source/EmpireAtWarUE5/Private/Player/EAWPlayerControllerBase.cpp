@@ -29,8 +29,12 @@ void AEAWPlayerControllerBase::SetupInputComponent()
 	bShowMouseCursor = true;
 	bEnableClickEvents = true;
 	bEnableMouseOverEvents = true;
-	FInputModeGameAndUI InputMode = FInputModeGameAndUI();
-	SetInputMode(InputMode.SetLockMouseToViewportBehavior(EMouseLockMode::LockAlways));
+	FInputModeGameAndUI InputMode;
+	InputMode.SetHideCursorDuringCapture(false);
+#if UE_BUILD_SHIPPING
+	InputMode.SetLockMouseToViewportBehavior(EMouseLockMode::LockAlways);
+#endif
+	SetInputMode(InputMode);
 
 	UEAWInputComponent* EAWInputComponent = Cast<UEAWInputComponent>(InputComponent);
 	UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(GetLocalPlayer());

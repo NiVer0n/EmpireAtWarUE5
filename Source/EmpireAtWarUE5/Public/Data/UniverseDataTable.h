@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Engine/DataTable.h"
+#include "Data/DA_Factions.h"
 #include "UniverseDataTable.generated.h"
 
 USTRUCT(BlueprintType)
@@ -11,14 +12,17 @@ struct FStarSystemData : public FTableRowBase
 {
 	GENERATED_USTRUCT_BODY()
 
-		UPROPERTY(EditAnywhere, BlueprintReadOnly)
-		FText Name;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	FText Name;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-		TSoftObjectPtr<UStaticMesh> Mesh;
+	TSoftObjectPtr<UStaticMesh> Mesh;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-		FVector Position;
+	FVector Position;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (Categories = "Factions"))
+	FGameplayTag FactionControl;
 };
 
 /**
@@ -28,5 +32,4 @@ UCLASS()
 class EMPIREATWARUE5_API UUniverseDataTable : public UDataTable
 {
 	GENERATED_BODY()
-	
 };

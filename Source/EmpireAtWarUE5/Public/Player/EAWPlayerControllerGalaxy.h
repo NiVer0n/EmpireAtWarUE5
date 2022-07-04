@@ -8,6 +8,7 @@
 #include "EAWPlayerControllerGalaxy.generated.h"
 
 class UCurveFloat;
+class AStarSystem;
 
 /**
  * 
@@ -18,19 +19,9 @@ class EMPIREATWARUE5_API AEAWPlayerControllerGalaxy : public AEAWPlayerControlle
 	GENERATED_BODY()
 
 public:
-	FORCEINLINE AActor* GetSelectedActor() const { return SelectedActor; };
+	FORCEINLINE AStarSystem* GetSelectedStarSystem() const { return CachedSelectedStarSystem; };
 
 protected:
-	AEAWPlayerControllerGalaxy(const FObjectInitializer& ObjectInitializer);
-
-	virtual void BeginPlay() override;
-	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
-	virtual void PlayerTick(float DeltaTime) override;
-	virtual void EnhancedStartPrimaryAction(const FInputActionValue& Value) override;
-	virtual void EnhancedZoomCamera(const FInputActionValue& Value) override;
-	void TimelineProgress(float Value);
-	void TimelineFinished();
-
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Zoom")
 	FFloatRange ZoomLimit;
 
@@ -41,22 +32,27 @@ protected:
 	UCurveFloat* CurveFloat;
 
 private:
-	AActor* GetActorUnderCursor();
-	void SelectActor();
-	void SetSelectionVisibility(bool Visible);
+	AEAWPlayerControllerGalaxy(const FObjectInitializer& ObjectInitializer);
 
+	virtual void BeginPlay() override;
+	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
+	virtual void PlayerTick(float DeltaTime) override;
+	virtual void EnhancedStartPrimaryAction(const FInputActionValue& Value) override;
+	virtual void EnhancedZoomCamera(const FInputActionValue& Value) override;
+	void TimelineProgress(float Value);
+	void TimelineFinished();
+
+	AActor* GetActorUnderCursor();
+	void TrySelectActor(AActor* InSelectedActor);
 	FVector GetZoomedCameraLocation() const;
 
-	UPROPERTY(Transient)
-	AActor* SelectedActor;
+	UPROPERTY()
+	AStarSystem* CachedSelectedStarSystem;
 
 	UPROPERTY()
 	bool bZoomInProgress;
 
-	UPROPERTY()
-	bool bIsZoomed;
-
-	UPROPERTY()
+	UPROPERTY(Transient)
 	FTimeline CurveTimeline;
 
 	FOnTimelineFloatStatic OnTimelineProgress;
