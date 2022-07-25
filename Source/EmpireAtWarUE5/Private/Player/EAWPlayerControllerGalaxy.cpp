@@ -1,18 +1,14 @@
 // NiVeron Games 2022. All rights reserved.
 
 #include "Player/EAWPlayerControllerGalaxy.h"
-#include "Components/SelectionComponent.h"
-#include "Components/NameComponent.h"
 #include "InputActionValue.h"
 #include "Kismet/KismetMathLibrary.h"
-#include "Gameplay/StarSystem.h"
+#include "Interfaces/Zoomable.h"
 
-AEAWPlayerControllerGalaxy::AEAWPlayerControllerGalaxy(const FObjectInitializer& ObjectInitializer)
-	: Super(ObjectInitializer)
-	, ZoomLimit(FFloatRange(125.0f, 1000.0f))
-	, ZoomedCameraOffset(FVector(0.0f, 50.0f, 0.0f))
-	, CachedSelectedStarSystem(nullptr)
+AEAWPlayerControllerGalaxy::AEAWPlayerControllerGalaxy()
+	: CachedSelectedActor(nullptr)
 	, bZoomInProgress(false)
+	, ZoomValue(0.0f)
 {
 }
 
@@ -47,61 +43,40 @@ void AEAWPlayerControllerGalaxy::EnhancedStartPrimaryAction(const FInputActionVa
 {
 	if (!bZoomInProgress)
 	{
-		TrySelectActor(GetActorUnderCursor());
+		Super::EnhancedStartPrimaryAction(Value);
 	}
 }
 
 void AEAWPlayerControllerGalaxy::EnhancedZoomCamera(const FInputActionValue& Value)
 {
-	if (bZoomInProgress)
+	const bool bIsZoomedIn = Value[0] > 0.0f;
+	ZoomValue = bIsZoomedIn ? CameraSettings.ZoomLimit.GetLowerBoundValue() : CameraSettings.ZoomLimit.GetUpperBoundValue();
+	if (bZoomInProgress || CameraSettings.CurrentZoom == ZoomValue)
 	{
 		return;
 	}
-
-	const bool bIsZoomedIn = Value[0] > 0.0f;
 	if (bIsZoomedIn)
 	{
-		TrySelectActor(GetActorUnderCursor());
+		TrySelectActor();
 	}
-	PlayerPawn->SetCameraLagEnabled(false);
-
-	CameraSettings.DesiredZoom = bIsZoomedIn ? ZoomLimit.GetLowerBoundValue() : ZoomLimit.GetUpperBoundValue();
-	bZoomInProgress = true;
-	SetMovementEnabled(!bIsZoomedIn);
-	CachedSelectedStarSystem->GetSelectionComponent()->SetCanBeSelected(!bIsZoomedIn);
-	CachedSelectedStarSystem->GetSelectionComponent()->OnSetSelected.Broadcast(!bIsZoomedIn);
-	CachedSelectedStarSystem->SetNameVisibility(!bIsZoomedIn);
-	CurveTimeline.PlayFromStart();
-}
-
-AActor* AEAWPlayerControllerGalaxy::GetActorUnderCursor()
-{
-	FHitResult HitResult;
-	GetHitResultUnderCursor(ECollisionChannel::ECC_Visibility, false, HitResult);
-	return HitResult.GetActor();
-}
-
-void AEAWPlayerControllerGalaxy::TrySelectActor(AActor* InSelectedActor)
-{
-	if (IsValid(CachedSelectedStarSystem))
-	{
-		CachedSelectedStarSystem->GetSelectionComponent()->OnSetSelected.Broadcast(false);
-		CachedSelectedStarSystem = nullptr;
-	}
-
-	AStarSystem* SelectedStarSystem = Cast<AStarSystem>(InSelectedActor);
-	if (!IsValid(SelectedStarSystem) || !SelectedStarSystem->GetSelectionComponent()->GetCanBeSelected())
+	CachedSelectedActor = SelectedActors.Last();
+	if (!IsValid(CachedSelectedActor) || !CachedSelectedActor->Implements<UZoomable>())
 	{
 		return;
 	}
-
-	CachedSelectedStarSystem = SelectedStarSystem;
-	CachedSelectedStarSystem->GetSelectionComponent()->OnSetSelected.Broadcast(true);
+	IZoomable::Execute_ZoomToObject(CachedSelectedActor, bIsZoomedIn);
+	
+	PlayerPawn->SetCameraLagEnabled(false);
+	CameraSettings.DesiredZoom = ZoomValue;
+	bZoomInProgress = true;
+	SetMovementEnabled(!bIsZoomedIn);
+	CurveTimeline.PlayFromStart();
 }
 
 void AEAWPlayerControllerGalaxy::TimelineProgress(float Value)
 {
 	CameraSettings.CurrentZoom = UKismetMathLibrary::Ease(CameraSettings.CurrentZoom, CameraSettings.DesiredZoom, Value, EEasingFunc::ExpoIn);
+	//CameraSettings.DesiredZoom = UKismetMathLibrary::Ease(CameraSettings.CurrentZoom, ZoomValue, Value, EEasingFunc::ExpoIn);
 	PlayerPawn->SetActorLocation(GetZoomedCameraLocation());
 }
 
@@ -114,6 +89,6 @@ void AEAWPlayerControllerGalaxy::TimelineFinished()
 FVector AEAWPlayerControllerGalaxy::GetZoomedCameraLocation() const
 {
 	const FVector CurrentLocation = PlayerPawn->GetActorLocation();
-	const FVector DesiredLocation = CachedSelectedStarSystem->GetActorLocation() - ZoomedCameraOffset;
+	const FVector DesiredLocation = CachedSelectedActor->GetActorLocation() - CameraSettings.ZoomedCameraOffset;
 	return FMath::VInterpTo(CurrentLocation, DesiredLocation, GetWorld()->GetDeltaSeconds(), CameraSettings.ZoomSpeed);
 }

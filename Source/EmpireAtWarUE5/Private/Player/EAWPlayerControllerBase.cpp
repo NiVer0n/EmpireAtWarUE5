@@ -9,17 +9,22 @@
 #include "InputAction.h"
 #include "InputActionValue.h"
 #include "EnhancedInputSubsystems.h"
+#include "Interfaces/Selectable.h"
+#include "Components/FactionComponent.h"
 
-AEAWPlayerControllerBase::AEAWPlayerControllerBase(const FObjectInitializer& ObjectInitializer)
-	: Super(ObjectInitializer)
-	, PlayerPawn(nullptr)
+AEAWPlayerControllerBase::AEAWPlayerControllerBase()
+	: PlayerPawn(nullptr)
 	, CameraSettings(FCameraSettings())
+	, SelectedActors()
 	, CameraBoundsVolume(nullptr)
 	, bIsMovementEnabled(true)
 	, CameraMovementAxisValue(FVector2D::ZeroVector)
 	, CameraZoomAxisValue(0.0f)
 	, SelectionStartPoint(FVector2D::ZeroVector)
 {
+	FactionComponent = CreateDefaultSubobject<UFactionComponent>(TEXT("FactionComponent"));
+	//@TODO: Remove this when implementing faction choise
+	FactionComponent->SetOwnerFactionTag(FGameplayTag::RequestGameplayTag(TEXT("Factions.Empire")));
 }
 
 void AEAWPlayerControllerBase::SetupInputComponent()
@@ -31,9 +36,6 @@ void AEAWPlayerControllerBase::SetupInputComponent()
 	bEnableMouseOverEvents = true;
 	FInputModeGameAndUI InputMode;
 	InputMode.SetHideCursorDuringCapture(false);
-#if UE_BUILD_SHIPPING
-	InputMode.SetLockMouseToViewportBehavior(EMouseLockMode::LockAlways);
-#endif
 	SetInputMode(InputMode);
 
 	UEAWInputComponent* EAWInputComponent = Cast<UEAWInputComponent>(InputComponent);
@@ -73,6 +75,12 @@ void AEAWPlayerControllerBase::EnhancedMove(const FInputActionValue& Value)
 	CameraMovementAxisValue.Y = Value[1];
 }
 
+void AEAWPlayerControllerBase::EnhancedStartPrimaryAction(const FInputActionValue& Value)
+{
+	DeselectAllActors();
+	TrySelectActor();
+}
+
 void AEAWPlayerControllerBase::EnhancedZoomCamera(const FInputActionValue& Value)
 {
 	CameraSettings.DesiredZoom = FMath::Clamp(CameraSettings.DesiredZoom + Value[0] * CameraSettings.ZoomModifier * -1.0f, CameraSettings.MinDistance, CameraSettings.MaxDistance);
@@ -85,10 +93,11 @@ void AEAWPlayerControllerBase::UpdateCameraMovement(float DeltaTime)
 		return;
 	}
 
-	FVector2D ViewportSize, ScrollBorder;
-	ViewportSize = FVector2D(GEngine->GameViewport->Viewport->GetSizeXY());
-	ScrollBorder.X = ViewportSize.X - CameraSettings.ScrollThreshold;
-	ScrollBorder.Y = ViewportSize.Y - CameraSettings.ScrollThreshold;
+	int32 ViewportX, ViewportY;
+	GetViewportSize(ViewportX, ViewportY);
+	FVector2D ScrollBorder;
+	ScrollBorder.X = ViewportX - CameraSettings.ScrollThreshold;
+	ScrollBorder.Y = ViewportY - CameraSettings.ScrollThreshold;
 	// Detect if cursor approach to the edge
 	const FVector2D MousePosition = GetCurrentMousePosition();
 	if (MousePosition.X <= CameraSettings.ScrollThreshold)
@@ -128,12 +137,11 @@ void AEAWPlayerControllerBase::UpdateCameraMovement(float DeltaTime)
 
 void AEAWPlayerControllerBase::UpdateCameraZoom(float DeltaTime)
 {
-	if (CameraSettings.CurrentZoom == CameraSettings.DesiredZoom)
+	if (CameraSettings.CurrentZoom != CameraSettings.DesiredZoom)
 	{
-		return;
+		CameraSettings.CurrentZoom = FMath::FInterpTo(CameraSettings.CurrentZoom, CameraSettings.DesiredZoom, DeltaTime, CameraSettings.ZoomSpeed);
+		PlayerPawn->SetTargetArmLength(CameraSettings.CurrentZoom);
 	}
-	CameraSettings.CurrentZoom = FMath::FInterpTo(CameraSettings.CurrentZoom, CameraSettings.DesiredZoom, DeltaTime, CameraSettings.ZoomSpeed);
-	PlayerPawn->SetTargetArmLength(CameraSettings.CurrentZoom);
 }
 
 FVector AEAWPlayerControllerBase::GetMousePositionInWorldSpace()
@@ -151,4 +159,39 @@ FVector2D AEAWPlayerControllerBase::GetCurrentMousePosition()
 	float MouseX, MouseY;
 	GetMousePosition(MouseX, MouseY);
 	return FVector2D(MouseX, MouseY);
+}
+
+bool AEAWPlayerControllerBase::TrySelectActor()
+{
+	AActor* SelectedActor = GetActorUnderCursor();
+	if (IsValid(SelectedActor) && SelectedActor->Implements<USelectable>())
+	{
+		DeselectAllActors();
+		ISelectable::Execute_SelectObject(SelectedActor);
+		AddSelectedActorToList(SelectedActor);
+		return true;
+	}
+	return false;
+}
+
+AActor* AEAWPlayerControllerBase::GetActorUnderCursor()
+{
+	FHitResult HitResult;
+	GetHitResultUnderCursor(ECollisionChannel::ECC_Visibility, false, HitResult);
+	return HitResult.GetActor();
+}
+
+void AEAWPlayerControllerBase::AddSelectedActorToList(AActor* SelectedActor)
+{
+	SelectedActors.Add(SelectedActor);
+}
+
+void AEAWPlayerControllerBase::DeselectAllActors()
+{
+	for (AActor* SelectedActor : SelectedActors)
+	{
+		// Actors that not implementing USelectable interface can't be stored in SelectedActors
+		ISelectable::Execute_DeselectObject(SelectedActor);
+	}
+	SelectedActors.Empty();
 }

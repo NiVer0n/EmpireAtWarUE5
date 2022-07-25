@@ -5,29 +5,34 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "Data/UniverseDataTable.h"
+#include "Interfaces/Selectable.h"
+#include "Interfaces/Zoomable.h"
 #include "StarSystem.generated.h"
-
-class USelectionComponent;
 
 /**
  * Base class of celestial body
  */
 UCLASS()
-class EMPIREATWARUE5_API AStarSystem : public AActor
+class EMPIREATWARUE5_API AStarSystem : public AActor, public ISelectable, public IZoomable
 {
 	GENERATED_BODY()
 
 public:
 	FORCEINLINE void SetStarSystemData(FStarSystemData* InStarSystemData) { StarSystemData = InStarSystemData; }
+	
+	virtual void SelectObject_Implementation() override;
+	virtual void DeselectObject_Implementation() override;
 
-	void SetNameVisibility(bool InVisible);
-	void SetSelectionVisibility(bool InVisible);
-	USelectionComponent* GetSelectionComponent() const { return SelectionComponent; }
+	virtual void ZoomToObject_Implementation(bool IsZoomIn) override;
 
 protected:
 	AStarSystem();
 
 	virtual void BeginPlay() override;
+	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
+	
+	UFUNCTION()
+	void ChangeFactionControl(FGameplayTag InFactionControlTag);
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	class USphereComponent* SphereComponent;
@@ -36,10 +41,13 @@ protected:
 	UStaticMeshComponent* MeshComponent;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
-	USelectionComponent* SelectionComponent;
+	class USelectionComponent* SelectionComponent;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	class UNameComponent* NameComponent;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
+	class UFactionComponent* FactionComponent;
 
 	FStarSystemData* StarSystemData;
 };

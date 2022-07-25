@@ -6,8 +6,6 @@
 #include "Components/ActorComponent.h"
 #include "SelectionComponent.generated.h"
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnSetSelectedDelegate, bool, bSelected);
-
 class UMaterialInterface;
 class USoundCue;
 
@@ -17,23 +15,16 @@ class EMPIREATWARUE5_API USelectionComponent : public UActorComponent
 	GENERATED_BODY()
 
 public:
-	FORCEINLINE bool IsSelected() const { return bIsSelected; }
 	FORCEINLINE void SetCanBeSelected(bool bCanSelect) { bCanBeSelected = bCanSelect; }
 	FORCEINLINE bool GetCanBeSelected() const { return bCanBeSelected; }
-
-	UFUNCTION()
-	void SetOwnerSelected(bool bInSelected);
-
-	UPROPERTY(BlueprintAssignable)
-	FOnSetSelectedDelegate OnSetSelected;
+	
+	void SetOwnerSelected(bool InSelected);
+	void SetSelectionCircleColor(const FColor SelectionColor);
 
 protected:
 	virtual void BeginPlay() override;
 
 	USelectionComponent();
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Selection")
-	AActor* Owner;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Selection")
 	bool bCanBeSelected;

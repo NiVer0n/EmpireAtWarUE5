@@ -31,6 +31,12 @@ public:
 	UPROPERTY(EditAnywhere, meta = (ClampMin = 0))
 	float ZoomModifier;
 
+	UPROPERTY(EditAnywhere)
+	FFloatRange ZoomLimit;
+
+	UPROPERTY(EditAnywhere)
+	FVector ZoomedCameraOffset;
+
 	UPROPERTY(EditAnywhere, meta = (ClampMin = 0))
 	float MinDistance;
 
@@ -44,7 +50,7 @@ public:
 	float DesiredZoom;
 	/* Distance from the screen border at which the mouse cursor causes the camera to move, in pixels. */
 	UPROPERTY(EditAnywhere, meta = (ClampMin = 0))
-	int32 ScrollThreshold;
+	float ScrollThreshold;
 };
 /**
  * Main player pawn (player camera)

@@ -14,9 +14,14 @@ class EMPIREATWARUE5_API AEAWGameModeBase : public AGameModeBase
 {
 	GENERATED_BODY()
 
-public:
-	virtual void PostLogin(APlayerController* NewPlayer) override;
-
 protected:
 	AEAWGameModeBase(const FObjectInitializer& ObjectInitializer);
+
+	virtual void StartPlay() override;
+
+private:
+	void CreateUniverse();
+
+	UPROPERTY(Transient)
+	TMap<FName, AActor*> UniverseMap;
 };

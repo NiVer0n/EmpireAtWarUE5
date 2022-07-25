@@ -3,22 +3,42 @@
 #include "EAWGameModeBase.h"
 #include "Player/EAWPlayerPawnBase.h"
 #include "Player/EAWPlayerControllerGalaxy.h"
-#include "Subsystems/FactionsSubsystem.h"
-#include "Utils/SubsystemUtils.h"
-#include "GameplayTagContainer.h"
+#include "Data/UniverseDataTable.h"
+#include "Gameplay/StarSystem.h"
+#include "Engine/EAWSettings.h"
 
 AEAWGameModeBase::AEAWGameModeBase(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
+	, UniverseMap()
 {
 	PlayerControllerClass = AEAWPlayerControllerGalaxy::StaticClass();
 	DefaultPawnClass = AEAWPlayerPawnBase::StaticClass();
 }
 
-void AEAWGameModeBase::PostLogin(APlayerController* NewPlayer)
+void AEAWGameModeBase::StartPlay()
 {
-	Super::PostLogin(NewPlayer);
+	Super::StartPlay();
 
-	UFactionsSubsystem* FactionsSubsystem = USubsystemUtils::GetFactionsSubsystem(GetWorld());
-	FactionsSubsystem->GetPlayerFactions().Add(NewPlayer, FGameplayTag::RequestGameplayTag(TEXT("Factions.Empire")));
-	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Orange, FString::Printf(TEXT("PlayerTag: %s"), *FactionsSubsystem->GetPlayerFactions().Find(NewPlayer)->ToString()));
+	CreateUniverse();
+}
+
+void AEAWGameModeBase::CreateUniverse()
+{
+	const UEAWSettings* EAWSettings = GetDefault<UEAWSettings>();
+	const UDataTable* UniverseData = EAWSettings->GetUniverseDataTable();
+	checkf(UniverseData, TEXT("%s: UniverseData is invalid."), ANSI_TO_TCHAR(__FUNCTION__));
+
+	const TSubclassOf<AStarSystem> StarSystemClass = EAWSettings->GetStarSystemClass();
+	checkf(StarSystemClass, TEXT("%s: StarSystemClass is invalid."), ANSI_TO_TCHAR(__FUNCTION__));
+
+	for (FName& RowName : UniverseData->GetRowNames())
+	{
+		if (FStarSystemData* Data = UniverseData->FindRow<FStarSystemData>(RowName, FString()))
+		{
+			AStarSystem* CelestialBody = GetWorld()->SpawnActorDeferred<AStarSystem>(StarSystemClass, FTransform(Data->Position), nullptr, nullptr, ESpawnActorCollisionHandlingMethod::AlwaysSpawn);
+			CelestialBody->SetStarSystemData(Data);
+			CelestialBody->FinishSpawning(FTransform(Data->Position));
+			UniverseMap.Add(RowName, CelestialBody);
+		}
+	}
 }

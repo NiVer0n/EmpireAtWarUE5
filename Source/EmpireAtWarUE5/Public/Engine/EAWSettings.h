@@ -5,16 +5,16 @@
 #include "CoreMinimal.h"
 #include "Engine/DeveloperSettings.h"
 #include "Data/UniverseDataTable.h"
-#include "SubsystemsSettings.generated.h"
+#include "EAWSettings.generated.h"
 
 class AStarSystem;
 class UDA_Factions;
 
 /**
- * Class for store default subsystem's settings in Project Settings.
+ * Class for store default classes and other stuff in Project Settings.
  */
-UCLASS(Config = Game, defaultconfig, meta = (DisplayName = "Subsystems Settings"))
-class EMPIREATWARUE5_API USubsystemsSettings : public UDeveloperSettings
+UCLASS(Config = Game, defaultconfig, meta = (DisplayName = "EAW Settings"))
+class EMPIREATWARUE5_API UEAWSettings : public UDeveloperSettings
 {
 	GENERATED_BODY()
 
@@ -24,14 +24,12 @@ public:
 	FORCEINLINE UDA_Factions* GetFactionsDataAsset() const { return FactionsDataAsset.LoadSynchronous(); }
 
 protected:
-	USubsystemsSettings(const FObjectInitializer& ObjectInitializer);
-
-	UPROPERTY(Config, EditDefaultsOnly, BlueprintReadOnly, Category = "UniverseSubsystem", AdvancedDisplay)
+	UPROPERTY(Config, EditDefaultsOnly, BlueprintReadOnly, Category = "Universe", AdvancedDisplay)
 	TSoftObjectPtr<UDataTable> UniverseDataTablePath;
 
-	UPROPERTY(Config, EditDefaultsOnly, BlueprintReadOnly, Category = "UniverseSubsystem", AdvancedDisplay)
+	UPROPERTY(Config, EditDefaultsOnly, BlueprintReadOnly, Category = "Universe", AdvancedDisplay)
 	TSubclassOf<AStarSystem> StarSystemClass;
 
-	UPROPERTY(Config, EditDefaultsOnly, BlueprintReadOnly, Category = "FactionsSubsystem", AdvancedDisplay)
+	UPROPERTY(Config, EditDefaultsOnly, BlueprintReadOnly, Category = "Factions", AdvancedDisplay)
 	TSoftObjectPtr<UDA_Factions> FactionsDataAsset;
 };

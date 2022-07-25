@@ -13,7 +13,7 @@ class EMPIREATWARUE5_API UNameWidget : public UUserWidget
 	GENERATED_BODY()
 
 public:
-	FORCEINLINE void SetName(FText Name) { TextBlock->SetText(Name); };
+	FORCEINLINE UTextBlock* GetTextBlock() const { return TextBlock; }
 
 protected:
 	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))

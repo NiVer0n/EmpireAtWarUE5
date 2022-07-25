@@ -11,11 +11,13 @@ AEAWPlayerPawnBase::AEAWPlayerPawnBase()
 	CameraSettings.LagSpeed = 3.0f;
 	CameraSettings.ZoomSpeed = 5.0f;
 	CameraSettings.ZoomModifier = 50.0f;
+	CameraSettings.ZoomLimit = FFloatRange(125.0f, 1000.0f);
+	CameraSettings.ZoomedCameraOffset = FVector(0.0f, 50.0f, 0.0f);
 	CameraSettings.MinDistance = 300.0f;
 	CameraSettings.MaxDistance = 2000.0f;
 	CameraSettings.CurrentZoom = 1000.0f;
-	CameraSettings.DesiredZoom = 1000.0f;
-	CameraSettings.ScrollThreshold = 20;
+	CameraSettings.DesiredZoom = CameraSettings.CurrentZoom;
+	CameraSettings.ScrollThreshold = 20.0f;
 
 	SpringArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("SpringArm"));
 	SpringArm->SetupAttachment(RootComponent);
