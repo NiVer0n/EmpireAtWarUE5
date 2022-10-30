@@ -59,6 +59,10 @@ void AEAWPlayerControllerGalaxy::EnhancedZoomCamera(const FInputActionValue& Val
 	{
 		TrySelectActor();
 	}
+	if (SelectedActors.IsEmpty())
+	{
+		return;
+	}
 	CachedSelectedActor = SelectedActors.Last();
 	if (!IsValid(CachedSelectedActor) || !CachedSelectedActor->Implements<UZoomable>())
 	{
