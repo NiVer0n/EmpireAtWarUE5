@@ -15,9 +15,12 @@ class EMPIREATWARUE5_API UFactionComponent : public UActorComponent
 	GENERATED_BODY()
 
 public:
-	FGameplayTag GetOwnerFactionTag() const { return OwnerFactionTag; }
-	void SetOwnerFactionTag(FGameplayTag NewFactionTag) { OwnerFactionTag = NewFactionTag; }
-	FColor GetFactionColor(FGameplayTag TargetFactionTag) const;
+	FORCEINLINE FGameplayTag GetOwnerFactionTag() const { return OwnerFactionTag; }
+
+	UFUNCTION()
+	FORCEINLINE void SetOwnerFactionTag(FGameplayTag NewFactionTag) { OwnerFactionTag = NewFactionTag; }
+	
+	FColor GetFactionColor() const;
 
 	UPROPERTY(BlueprintAssignable)
 	FOnFactionControlChanged OnFactionControlChanged;
@@ -26,6 +29,7 @@ protected:
 	UFactionComponent();
 
 	virtual void BeginPlay() override;
+	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 
 	UPROPERTY()
 	class UDA_Factions* FactionsDataAsset;

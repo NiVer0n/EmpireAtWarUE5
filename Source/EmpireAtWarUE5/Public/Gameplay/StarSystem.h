@@ -29,10 +29,6 @@ protected:
 	AStarSystem();
 
 	virtual void BeginPlay() override;
-	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
-	
-	UFUNCTION()
-	void ChangeFactionControl(FGameplayTag InFactionControlTag);
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	class USphereComponent* SphereComponent;
@@ -48,6 +44,9 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	class UFactionComponent* FactionComponent;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
+	class UMinimapComponent* MinimapComponent;
 
 	FStarSystemData* StarSystemData;
 };

@@ -1,6 +1,7 @@
 // NiVeron Games 2022. All rights reserved.
 
 #include "Components/SelectionComponent.h"
+#include "Components/FactionComponent.h"
 
 USelectionComponent::USelectionComponent()
 	: bCanBeSelected(true)
@@ -24,6 +25,20 @@ void USelectionComponent::BeginPlay()
 	PlaneComponent->SetMaterial(0, SelectionCircleMaterialInstance);
 	PlaneComponent->SetVisibility(false);
 	PlaneComponent->RegisterComponent();
+
+	FactionComponent = Owner->FindComponentByClass<UFactionComponent>();
+	if (IsValid(FactionComponent))
+	{
+		FactionComponent->OnFactionControlChanged.AddDynamic(this, &USelectionComponent::ReloadSelectionColor);
+	}
+}
+
+void USelectionComponent::EndPlay(const EEndPlayReason::Type EndPlayReason)
+{
+	if (IsValid(FactionComponent))
+	{
+		FactionComponent->OnFactionControlChanged.RemoveDynamic(this, &USelectionComponent::ReloadSelectionColor);
+	}
 }
 
 void USelectionComponent::SetOwnerSelected(bool InSelected)
@@ -37,4 +52,9 @@ void USelectionComponent::SetOwnerSelected(bool InSelected)
 void USelectionComponent::SetSelectionCircleColor(const FColor SelectionColor)
 {
 	SelectionCircleMaterialInstance->SetVectorParameterValue(TEXT("Color"), SelectionColor);
+}
+
+void USelectionComponent::ReloadSelectionColor(FGameplayTag NewOwnerFactionTag)
+{
+	SetSelectionCircleColor(FactionComponent->GetFactionColor());
 }

@@ -4,10 +4,12 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
+#include "GameplayTagContainer.h"
 #include "SelectionComponent.generated.h"
 
 class UMaterialInterface;
 class USoundCue;
+class UFactionComponent;
 
 UCLASS(Blueprintable, BlueprintType, ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
 class EMPIREATWARUE5_API USelectionComponent : public UActorComponent
@@ -23,8 +25,12 @@ public:
 
 protected:
 	virtual void BeginPlay() override;
+	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 
 	USelectionComponent();
+
+	UFUNCTION()
+	void ReloadSelectionColor(FGameplayTag NewOwnerFactionTag);
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Selection")
 	bool bCanBeSelected;
@@ -46,6 +52,9 @@ protected:
 
 	UPROPERTY()
 	UStaticMeshComponent* PlaneComponent;
+
+	UPROPERTY()
+	UFactionComponent* FactionComponent;
 
 	UPROPERTY(EditAnywhere, Category = "Selection Settings")
 	USoundCue* SelectedSound;
