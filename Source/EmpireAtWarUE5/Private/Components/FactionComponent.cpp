@@ -9,15 +9,13 @@
 UFactionComponent::UFactionComponent()
 	: FactionsDataAsset(nullptr)
 	, OwnerFactionTag(FGameplayTag())
-{
-	PrimaryComponentTick.bCanEverTick = true;
-}
+{ }
 
 void UFactionComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
-	FactionsDataAsset = GetDefault<UEAWSettings>()->GetFactionsDataAsset();
+	FactionsDataAsset = GEAWSettings.GetFactionsDataAsset();
 	checkf(FactionsDataAsset, TEXT("%s: FactionsDataAsset is invalid."), ANSI_TO_TCHAR(__FUNCTION__));
 	OnFactionControlChanged.AddDynamic(this, &UFactionComponent::SetOwnerFactionTag);
 }

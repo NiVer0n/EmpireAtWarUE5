@@ -24,11 +24,10 @@ void AEAWGameModeBase::StartPlay()
 
 void AEAWGameModeBase::CreateUniverse()
 {
-	const UEAWSettings* EAWSettings = GetDefault<UEAWSettings>();
-	const UDataTable* UniverseData = EAWSettings->GetUniverseDataTable();
+	const UDataTable* UniverseData = GEAWSettings.GetUniverseDataTable();
 	checkf(UniverseData, TEXT("%s: UniverseData is invalid."), ANSI_TO_TCHAR(__FUNCTION__));
 
-	const TSubclassOf<AStarSystem> StarSystemClass = EAWSettings->GetStarSystemClass();
+	const TSubclassOf<AStarSystem> StarSystemClass = GEAWSettings.GetStarSystemClass();
 	checkf(StarSystemClass, TEXT("%s: StarSystemClass is invalid."), ANSI_TO_TCHAR(__FUNCTION__));
 
 	for (FName& RowName : UniverseData->GetRowNames())

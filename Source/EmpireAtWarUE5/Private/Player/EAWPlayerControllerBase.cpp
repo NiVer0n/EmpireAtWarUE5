@@ -4,6 +4,7 @@
 #include "Components/EAWInputComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "Utils/CameraBoundsVolume.h"
+#include "Utils/EAWGameplayTags.h"
 #include "InputTriggers.h"
 #include "InputMappingContext.h"
 #include "InputAction.h"
@@ -11,6 +12,7 @@
 #include "EnhancedInputSubsystems.h"
 #include "Interfaces/Selectable.h"
 #include "Components/FactionComponent.h"
+#include "Engine/EAWSettings.h"
 
 AEAWPlayerControllerBase::AEAWPlayerControllerBase()
 	: PlayerPawn(nullptr)
@@ -38,15 +40,17 @@ void AEAWPlayerControllerBase::SetupInputComponent()
 	InputMode.SetHideCursorDuringCapture(false);
 	SetInputMode(InputMode);
 
-	UEAWInputComponent* EAWInputComponent = Cast<UEAWInputComponent>(InputComponent);
 	UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(GetLocalPlayer());
-	check(Subsystem && EAWInputComponent);
+	check(Subsystem);
+	check(GEAWSettings.GetInputConfigAsset());
 	Subsystem->ClearAllMappings();
-	Subsystem->AddMappingContext(EAWInputComponent->GetMappingContext(), 0);
+	Subsystem->AddMappingContext(GEAWSettings.GetInputConfigAsset()->GetMappingContext(), 0);
 
-	EAWInputComponent->BindAction(EAWInputComponent->GetMovementAction(), ETriggerEvent::Triggered, this, &AEAWPlayerControllerBase::EnhancedMove);
-	EAWInputComponent->BindAction(EAWInputComponent->GetMouseAction(), ETriggerEvent::Started, this, &AEAWPlayerControllerBase::EnhancedStartPrimaryAction);
-	EAWInputComponent->BindAction(EAWInputComponent->GetZoomAction(), ETriggerEvent::Triggered, this, &AEAWPlayerControllerBase::EnhancedZoomCamera);
+	UEAWInputComponent* EAWInputComponent = Cast<UEAWInputComponent>(InputComponent);
+	check(EAWInputComponent);
+	EAWInputComponent->BindActionByTag(GEAWSettings.GetInputConfigAsset(), GEAWGameplayTags.INPUT_MOVE_TAG, ETriggerEvent::Triggered, this, &ThisClass::EnhancedMove);
+	EAWInputComponent->BindActionByTag(GEAWSettings.GetInputConfigAsset(), GEAWGameplayTags.INPUT_PRIMARY_ACTION_TAG, ETriggerEvent::Triggered, this, &ThisClass::EnhancedStartPrimaryAction);
+	EAWInputComponent->BindActionByTag(GEAWSettings.GetInputConfigAsset(), GEAWGameplayTags.INPUT_ZOOM_TAG, ETriggerEvent::Triggered, this, &ThisClass::EnhancedZoomCamera);
 }
 
 void AEAWPlayerControllerBase::OnPossess(APawn* InPawn)
@@ -147,11 +151,8 @@ void AEAWPlayerControllerBase::UpdateCameraZoom(float DeltaTime)
 FVector AEAWPlayerControllerBase::GetMousePositionInWorldSpace()
 {
 	FVector WorldLocation, WorldDirection;
-	if (DeprojectMousePositionToWorld(WorldLocation, WorldDirection))
-	{
-		return WorldLocation - WorldDirection * (WorldLocation.Z / WorldDirection.Z);
-	}
-	return FVector();
+	DeprojectMousePositionToWorld(WorldLocation, WorldDirection);
+	return WorldLocation - WorldDirection * (WorldLocation.Z / WorldDirection.Z);
 }
 
 FVector2D AEAWPlayerControllerBase::GetCurrentMousePosition()

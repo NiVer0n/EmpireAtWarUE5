@@ -9,6 +9,7 @@
 
 struct FInputActionValue;
 class UInputAction;
+class UDA_InputConfig;
 class UInputMappingContext;
 class ACameraBoundsVolume;
 class UFactionComponent;
@@ -44,6 +45,10 @@ protected:
 
 	bool TrySelectActor();
 	AActor* GetActorUnderCursor();
+
+	/** The input config that maps Input Actions to Input Tags*/
+	UPROPERTY(EditDefaultsOnly, Category = "Input")
+	UDA_InputConfig* InputConfig;
 
 	UPROPERTY(Transient)
 	AEAWPlayerPawnBase* PlayerPawn;
