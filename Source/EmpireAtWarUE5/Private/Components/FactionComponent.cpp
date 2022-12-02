@@ -40,7 +40,8 @@ FColor UFactionComponent::GetFactionColor() const
 	}
 
 	const FFactionsData* SourceFactionData = FactionsDataAsset->GetFactionsData().Find(OwnerFactionTag);
-	if (SourceFactionData && PlayerTag.MatchesTagExact(SourceFactionData->PrimaryEnemy))
+	check(SourceFactionData);
+	if (PlayerTag.MatchesTagExact(SourceFactionData->PrimaryEnemy))
 	{
 		return FactionsDataAsset->GetEnemyColor();
 	}
