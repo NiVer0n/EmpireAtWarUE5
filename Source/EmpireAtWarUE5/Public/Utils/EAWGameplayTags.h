@@ -19,7 +19,7 @@ public:
 
 	static void InitializeNativeTags();
 
-	//Input Tags
+	// Input Tags
 	UPROPERTY(Config, EditAnywhere, BlueprintReadOnly, Category = "Tags|Input", meta = (Categories = "Input"))
 	FGameplayTag INPUT_MOVE_TAG;
 
@@ -28,6 +28,23 @@ public:
 
 	UPROPERTY(Config, EditAnywhere, BlueprintReadOnly, Category = "Tags|Input", meta = (Categories = "Input"))
 	FGameplayTag INPUT_ZOOM_TAG;
+
+	// Faction Tags
+	UPROPERTY(Config, EditAnywhere, BlueprintReadOnly, Category = "Tags|Faction", meta = (Categories = "Faction"))
+	FGameplayTag FACTION_NEUTRAL_TAG;
+
+	UPROPERTY(Config, EditAnywhere, BlueprintReadOnly, Category = "Tags|Faction", meta = (Categories = "Faction"))
+	FGameplayTag FACTION_EMPIRE_TAG;
+
+	UPROPERTY(Config, EditAnywhere, BlueprintReadOnly, Category = "Tags|Faction", meta = (Categories = "Faction"))
+	FGameplayTag FACTION_REBELS_TAG;
+
+	UPROPERTY(Config, EditAnywhere, BlueprintReadOnly, Category = "Tags|Faction", meta = (Categories = "Faction"))
+	FGameplayTag FACTION_PIRATES_TAG;
+
+	// HUD Tags
+	UPROPERTY(Config, EditAnywhere, BlueprintReadOnly, Category = "Tags|Widges", meta = (Categories = "HUD"))
+	FGameplayTag WIDGETS_MINIMAP_TAG;
 
 protected:
 	//Registers all of the tags with the GameplayTags Manager

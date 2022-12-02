@@ -39,7 +39,7 @@ public:
 	FORCEINLINE FColor GetEnemyColor() const { return EnemyColor; };
 
 protected:
-	UPROPERTY(EditAnywhere, Category = "FactionsData", meta = (Categories = "Factions"))
+	UPROPERTY(EditAnywhere, Category = "FactionsData", meta = (Categories = "Faction"))
 	TMap<FGameplayTag, FFactionsData> FactionsData;
 
 	UPROPERTY(EditAnywhere, Category = "FactionsData")

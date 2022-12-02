@@ -21,7 +21,7 @@ struct FStarSystemData : public FTableRowBase
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	FVector Position;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (Categories = "Factions"))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (Categories = "Faction"))
 	FGameplayTag FactionControl;
 };
 

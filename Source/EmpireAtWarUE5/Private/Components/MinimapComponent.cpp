@@ -6,6 +6,7 @@
 #include "Player/EAWHUDBase.h"
 #include "UI/MinimapWidget.h"
 #include "UI/MinimapObjectWidget.h"
+#include "Utils/EAWGameplayTags.h"
 
 UMinimapComponent::UMinimapComponent()
 	: MinimapWidget(nullptr)
@@ -29,7 +30,7 @@ void UMinimapComponent::BeginPlay()
 	{
 		if (AEAWHUDBase* HUD = Cast<AEAWHUDBase>(PC->GetHUD()))
 		{
-			MinimapWidget = HUD->GetDesiredWidget<UMinimapWidget>(FGameplayTag::RequestGameplayTag(TEXT("HUD.Widgets.Minimap")));
+			MinimapWidget = HUD->GetDesiredWidget<UMinimapWidget>(GEAWGameplayTags.WIDGETS_MINIMAP_TAG);
 			if (IsValid(MinimapWidget))
 			{
 				PinnedMinimapObjectWidget = MinimapWidget->AddObjectToMinimap(GetOwner()->GetActorLocation());
