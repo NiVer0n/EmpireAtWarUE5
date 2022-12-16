@@ -18,9 +18,13 @@ void FEAWGameplayTags::InitializeNativeTags()
 void FEAWGameplayTags::AddAllTags(UGameplayTagsManager& Manager)
 {
 	// Input Tags
-	AddTag(INPUT_MOVE_TAG, "Input.Move", "Move input.");
-	AddTag(INPUT_PRIMARY_ACTION_TAG, "Input.PrimaryAction", "Interaction input.");
+	AddTag(INPUT_MOVE_TAG, "Input.Move", "Movement input.");
+	AddTag(INPUT_ROTATE_TAG, "Input.Rotate", "Rotation input.");
 	AddTag(INPUT_ZOOM_TAG, "Input.Zoom", "Zoom input.");
+	AddTag(INPUT_SLIDE_TAG, "Input.Slide", "Free slide camera.");
+	AddTag(INPUT_SPIN_TAG, "Input.Spin", "Free spin camera.");
+	AddTag(INPUT_RESTORE_POSITION_TAG, "Input.RestorePosition", "Restore last saved camera position.");
+	AddTag(INPUT_PRIMARY_ACTION_TAG, "Input.PrimaryAction", "Interaction input.");
 	// Faction Tags
 	AddTag(FACTION_NEUTRAL_TAG, "Faction.Neutral", "Non-playable faction.");
 	AddTag(FACTION_EMPIRE_TAG, "Faction.Empire", "Playable faction.");

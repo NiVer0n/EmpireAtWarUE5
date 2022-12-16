@@ -11,7 +11,6 @@ struct FInputActionValue;
 class UInputAction;
 class UDA_InputConfig;
 class UInputMappingContext;
-class ACameraBoundsVolume;
 class UFactionComponent;
 
 /**
@@ -23,38 +22,30 @@ class EMPIREATWARUE5_API AEAWPlayerControllerBase : public APlayerController
 	GENERATED_BODY()
 
 public:
-	AEAWPlayerControllerBase();
-
-	FORCEINLINE void SetMovementEnabled(bool MovementEnabled) { bIsMovementEnabled = MovementEnabled; };
 	/** Return mouse 2D position vector converted to 3d vector */
-	FORCEINLINE FVector GetMousePositionInWorldSpace();
-	FORCEINLINE ACameraBoundsVolume* GetCameraBoundsVolume() const { return CameraBoundsVolume; };
+	FVector GetMousePositionInWorldSpace();
+	FVector GetImpactPointUnderCursor(ECollisionChannel TraceChannel, bool TraceComplex, bool& DidHit);
+	AActor* GetActorUnderCursor();
 	FORCEINLINE FVector2D GetSelectionStartPoint() const { return SelectionStartPoint; };
 	FORCEINLINE UFactionComponent* GetFactionComponent() const { return FactionComponent; }
 
-	FVector2D GetCurrentMousePosition();
-
 protected:
+	AEAWPlayerControllerBase();
+
 	virtual void SetupInputComponent() override;
 	virtual void OnPossess(APawn* InPawn) override;
-	virtual void PlayerTick(float DeltaTime) override;
 	virtual void EnhancedMove(const FInputActionValue& Value);
-	virtual void EnhancedStartPrimaryAction(const FInputActionValue& Value);
-	virtual void EnhancedZoomCamera(const FInputActionValue& Value);
-	virtual void UpdateCameraZoom(float DeltaTime);
+	virtual void EnhancedRotate(const FInputActionValue& Value);
+	virtual void EnhancedZoom(const FInputActionValue& Value);
+	virtual void Slide();
+	virtual void Spin();
+	virtual void RestorePosition();
+	virtual void EnhancedStartPrimaryAction();
 
 	bool TrySelectActor();
-	AActor* GetActorUnderCursor();
-
-	/** The input config that maps Input Actions to Input Tags*/
-	UPROPERTY(EditDefaultsOnly, Category = "Input")
-	UDA_InputConfig* InputConfig;
 
 	UPROPERTY(Transient)
 	AEAWPlayerPawnBase* PlayerPawn;
-
-	UPROPERTY(Transient)
-	FCameraSettings CameraSettings;
 
 	UPROPERTY()
 	TArray<AActor*> SelectedActors;
@@ -63,21 +54,8 @@ protected:
 	UFactionComponent* FactionComponent;
 
 private:
-	void UpdateCameraMovement(float DeltaTime);
 	void AddSelectedActorToList(AActor* SelectedActor);
 	void DeselectAllActors();
-
-	UPROPERTY(Transient)
-	ACameraBoundsVolume* CameraBoundsVolume;
-
-	UPROPERTY()
-	bool bIsMovementEnabled;
-
-	UPROPERTY()
-	FVector2D CameraMovementAxisValue;
-
-	UPROPERTY()
-	float CameraZoomAxisValue;
 
 	UPROPERTY()
 	FVector2D SelectionStartPoint;

@@ -24,10 +24,22 @@ public:
 	FGameplayTag INPUT_MOVE_TAG;
 
 	UPROPERTY(Config, EditAnywhere, BlueprintReadOnly, Category = "Tags|Input", meta = (Categories = "Input"))
-	FGameplayTag INPUT_PRIMARY_ACTION_TAG;
+	FGameplayTag INPUT_ROTATE_TAG;
 
 	UPROPERTY(Config, EditAnywhere, BlueprintReadOnly, Category = "Tags|Input", meta = (Categories = "Input"))
 	FGameplayTag INPUT_ZOOM_TAG;
+
+	UPROPERTY(Config, EditAnywhere, BlueprintReadOnly, Category = "Tags|Input", meta = (Categories = "Input"))
+	FGameplayTag INPUT_SLIDE_TAG;
+
+	UPROPERTY(Config, EditAnywhere, BlueprintReadOnly, Category = "Tags|Input", meta = (Categories = "Input"))
+	FGameplayTag INPUT_SPIN_TAG;
+
+	UPROPERTY(Config, EditAnywhere, BlueprintReadOnly, Category = "Tags|Input", meta = (Categories = "Input"))
+	FGameplayTag INPUT_RESTORE_POSITION_TAG;
+
+	UPROPERTY(Config, EditAnywhere, BlueprintReadOnly, Category = "Tags|Input", meta = (Categories = "Input"))
+	FGameplayTag INPUT_PRIMARY_ACTION_TAG;
 
 	// Faction Tags
 	UPROPERTY(Config, EditAnywhere, BlueprintReadOnly, Category = "Tags|Faction", meta = (Categories = "Faction"))

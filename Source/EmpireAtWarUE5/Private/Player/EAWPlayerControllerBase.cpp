@@ -2,8 +2,6 @@
 
 #include "Player/EAWPlayerControllerBase.h"
 #include "Components/EAWInputComponent.h"
-#include "Kismet/GameplayStatics.h"
-#include "Utils/CameraBoundsVolume.h"
 #include "Utils/EAWGameplayTags.h"
 #include "InputTriggers.h"
 #include "InputMappingContext.h"
@@ -13,20 +11,16 @@
 #include "Interfaces/Selectable.h"
 #include "Components/FactionComponent.h"
 #include "Engine/EAWSettings.h"
+#include "Kismet/KismetMathLibrary.h"
 
 AEAWPlayerControllerBase::AEAWPlayerControllerBase()
 	: PlayerPawn(nullptr)
-	, CameraSettings(FCameraSettings())
 	, SelectedActors()
-	, CameraBoundsVolume(nullptr)
-	, bIsMovementEnabled(true)
-	, CameraMovementAxisValue(FVector2D::ZeroVector)
-	, CameraZoomAxisValue(0.0f)
 	, SelectionStartPoint(FVector2D::ZeroVector)
 {
-	FactionComponent = CreateDefaultSubobject<UFactionComponent>(TEXT("FactionComponent"));
-	//@TODO: Remove this when implementing faction choise
-	FactionComponent->SetOwnerFactionTag(FGameplayTag::RequestGameplayTag(TEXT("Factions.Empire")));
+	FactionComponent = CreateDefaultSubobject<UFactionComponent>("FactionComponent");
+	// @TODO: Remove this when implementing faction choise
+	FactionComponent->SetOwnerFactionTag(GEAWGameplayTags.FACTION_EMPIRE_TAG);
 }
 
 void AEAWPlayerControllerBase::SetupInputComponent()
@@ -49,8 +43,12 @@ void AEAWPlayerControllerBase::SetupInputComponent()
 	UEAWInputComponent* EAWInputComponent = Cast<UEAWInputComponent>(InputComponent);
 	check(EAWInputComponent);
 	EAWInputComponent->BindActionByTag(GEAWSettings.GetInputConfigAsset(), GEAWGameplayTags.INPUT_MOVE_TAG, ETriggerEvent::Triggered, this, &ThisClass::EnhancedMove);
+	EAWInputComponent->BindActionByTag(GEAWSettings.GetInputConfigAsset(), GEAWGameplayTags.INPUT_ROTATE_TAG, ETriggerEvent::Triggered, this, &ThisClass::EnhancedRotate);
+	EAWInputComponent->BindActionByTag(GEAWSettings.GetInputConfigAsset(), GEAWGameplayTags.INPUT_ZOOM_TAG, ETriggerEvent::Triggered, this, &ThisClass::EnhancedZoom);
+	EAWInputComponent->BindActionByTag(GEAWSettings.GetInputConfigAsset(), GEAWGameplayTags.INPUT_SLIDE_TAG, ETriggerEvent::Triggered, this, &ThisClass::Slide);
+	EAWInputComponent->BindActionByTag(GEAWSettings.GetInputConfigAsset(), GEAWGameplayTags.INPUT_SPIN_TAG, ETriggerEvent::Triggered, this, &ThisClass::Spin);
+	EAWInputComponent->BindActionByTag(GEAWSettings.GetInputConfigAsset(), GEAWGameplayTags.INPUT_RESTORE_POSITION_TAG, ETriggerEvent::Triggered, this, &ThisClass::RestorePosition);
 	EAWInputComponent->BindActionByTag(GEAWSettings.GetInputConfigAsset(), GEAWGameplayTags.INPUT_PRIMARY_ACTION_TAG, ETriggerEvent::Triggered, this, &ThisClass::EnhancedStartPrimaryAction);
-	EAWInputComponent->BindActionByTag(GEAWSettings.GetInputConfigAsset(), GEAWGameplayTags.INPUT_ZOOM_TAG, ETriggerEvent::Triggered, this, &ThisClass::EnhancedZoomCamera);
 }
 
 void AEAWPlayerControllerBase::OnPossess(APawn* InPawn)
@@ -58,94 +56,74 @@ void AEAWPlayerControllerBase::OnPossess(APawn* InPawn)
 	Super::OnPossess(InPawn);
 
 	PlayerPawn = Cast<AEAWPlayerPawnBase>(InPawn);
-	checkf(IsValid(PlayerPawn), TEXT("AEAWPlayerControllerBase::OnPossess(APawn* InPawn): PlayerPawn returns null."));
-
-	CameraSettings = PlayerPawn->GetCameraSettings();
-	checkf(IsValid(GetWorld()), TEXT("AEAWPlayerControllerBase::SetupInputComponent(): GetWorld() returns null."));
-	CameraBoundsVolume = Cast<ACameraBoundsVolume>(UGameplayStatics::GetActorOfClass(GetWorld(), ACameraBoundsVolume::StaticClass()));
-}
-
-void AEAWPlayerControllerBase::PlayerTick(float DeltaTime)
-{
-	Super::PlayerTick(DeltaTime);
-
-	UpdateCameraMovement(DeltaTime);
-	UpdateCameraZoom(DeltaTime);
 }
 
 void AEAWPlayerControllerBase::EnhancedMove(const FInputActionValue& Value)
 {
-	CameraMovementAxisValue.X = Value[0];
-	CameraMovementAxisValue.Y = Value[1];
+	if (IsValid(PlayerPawn))
+	{
+		PlayerPawn->MoveRight(Value[0]);
+		PlayerPawn->MoveForward(Value[1]);
+		PlayerPawn->MoveUp(Value[2]);
+	}
 }
 
-void AEAWPlayerControllerBase::EnhancedStartPrimaryAction(const FInputActionValue& Value)
+void AEAWPlayerControllerBase::EnhancedRotate(const FInputActionValue& Value)
+{
+	if (IsValid(PlayerPawn))
+	{
+		PlayerPawn->RotateYaw(Value[0]);
+		PlayerPawn->RotatePitch(Value[1]);
+	}
+}
+
+void AEAWPlayerControllerBase::EnhancedZoom(const FInputActionValue& Value)
+{
+	if (IsValid(PlayerPawn))
+	{
+		PlayerPawn->Zoom(Value[0]);
+		// Uncomment lines below to use Zooming to cursor functionality
+		// bool DidHit;
+		// ECollisionChannel CollisionChannel = ECollisionChannel::ECC_WorldStatic;
+		// FVector ImpactPointUnderCursor = GetImpactPointUnderCursor(CollisionChannel, false, DidHit);
+		// PlayerPawn->ZoomToCursor(Value[0], CollisionChannel, ImpactPointUnderCursor, DidHit);
+	}
+}
+
+void AEAWPlayerControllerBase::Slide()
+{
+	if (IsValid(PlayerPawn))
+	{
+		float MouseXDelta, MouseYDelta;
+		GetInputMouseDelta(MouseXDelta, MouseYDelta);
+		PlayerPawn->MoveRight(MouseXDelta * -1.0f);
+		PlayerPawn->MoveForward(MouseYDelta * -1.0f);
+	}
+}
+
+void AEAWPlayerControllerBase::Spin()
+{
+	if (IsValid(PlayerPawn))
+	{
+		float MouseXDelta, MouseYDelta;
+		GetInputMouseDelta(MouseXDelta, MouseYDelta);
+		PlayerPawn->RotateYaw(MouseXDelta * -1.0f);
+		PlayerPawn->RotatePitch(MouseYDelta * -1.0f);
+	}
+}
+
+void AEAWPlayerControllerBase::RestorePosition()
+{
+	if (IsValid(PlayerPawn))
+	{
+		PlayerPawn->LoadPositionSaveFormat(PlayerPawn->GetLastSavedPosition());
+	}
+}
+
+void AEAWPlayerControllerBase::EnhancedStartPrimaryAction()
 {
 	DeselectAllActors();
 	TrySelectActor();
-}
-
-void AEAWPlayerControllerBase::EnhancedZoomCamera(const FInputActionValue& Value)
-{
-	CameraSettings.DesiredZoom = FMath::Clamp(CameraSettings.DesiredZoom + Value[0] * CameraSettings.ZoomModifier * -1.0f, CameraSettings.MinDistance, CameraSettings.MaxDistance);
-}
-
-void AEAWPlayerControllerBase::UpdateCameraMovement(float DeltaTime)
-{
-	if (!bIsMovementEnabled)
-	{
-		return;
-	}
-
-	int32 ViewportX, ViewportY;
-	GetViewportSize(ViewportX, ViewportY);
-	FVector2D ScrollBorder;
-	ScrollBorder.X = ViewportX - CameraSettings.ScrollThreshold;
-	ScrollBorder.Y = ViewportY - CameraSettings.ScrollThreshold;
-	// Detect if cursor approach to the edge
-	const FVector2D MousePosition = GetCurrentMousePosition();
-	if (MousePosition.X <= CameraSettings.ScrollThreshold)
-	{
-		CameraMovementAxisValue.X -= 1.0f - (MousePosition.X / CameraSettings.ScrollThreshold);
-	}
-	else if (MousePosition.X >= ScrollBorder.X)
-	{
-		CameraMovementAxisValue.X += (MousePosition.X - ScrollBorder.X) / CameraSettings.ScrollThreshold;
-	}
-
-	if (MousePosition.Y <= CameraSettings.ScrollThreshold)
-	{
-		CameraMovementAxisValue.Y += 1.0f - (MousePosition.Y / CameraSettings.ScrollThreshold);
-	}
-	else if (MousePosition.Y >= ScrollBorder.Y)
-	{
-		CameraMovementAxisValue.Y -= (MousePosition.Y - ScrollBorder.Y) / CameraSettings.ScrollThreshold;
-	}
-
-	CameraMovementAxisValue.X = FMath::Clamp(CameraMovementAxisValue.X, -1.0f, 1.0f);
-	CameraMovementAxisValue.Y = FMath::Clamp(CameraMovementAxisValue.Y, -1.0f, 1.0f);
-
-	if (CameraMovementAxisValue.X != 0.0f || CameraMovementAxisValue.Y != 0.0f)
-	{
-		FVector Location = PlayerPawn->GetActorLocation();
-		Location += FVector::ForwardVector * CameraSettings.Speed * CameraSettings.SpeedMultiplier * CameraMovementAxisValue.Y * DeltaTime;
-		Location += FVector::RightVector * CameraSettings.Speed * CameraSettings.SpeedMultiplier * CameraMovementAxisValue.X * DeltaTime;
-
-		if (!CameraBoundsVolume || CameraBoundsVolume->EncompassesPoint(Location))
-		{
-			PlayerPawn->SetActorLocation(Location);
-		}
-	}
-	CameraMovementAxisValue = FVector2D::ZeroVector;
-}
-
-void AEAWPlayerControllerBase::UpdateCameraZoom(float DeltaTime)
-{
-	if (CameraSettings.CurrentZoom != CameraSettings.DesiredZoom)
-	{
-		CameraSettings.CurrentZoom = FMath::FInterpTo(CameraSettings.CurrentZoom, CameraSettings.DesiredZoom, DeltaTime, CameraSettings.ZoomSpeed);
-		PlayerPawn->SetTargetArmLength(CameraSettings.CurrentZoom);
-	}
 }
 
 FVector AEAWPlayerControllerBase::GetMousePositionInWorldSpace()
@@ -155,11 +133,19 @@ FVector AEAWPlayerControllerBase::GetMousePositionInWorldSpace()
 	return WorldLocation - WorldDirection * (WorldLocation.Z / WorldDirection.Z);
 }
 
-FVector2D AEAWPlayerControllerBase::GetCurrentMousePosition()
+FVector AEAWPlayerControllerBase::GetImpactPointUnderCursor(ECollisionChannel TraceChannel, bool TraceComplex, bool& DidHit)
 {
-	float MouseX, MouseY;
-	GetMousePosition(MouseX, MouseY);
-	return FVector2D(MouseX, MouseY);
+	FHitResult HitResult;
+	GetHitResultUnderCursor(TraceChannel, TraceComplex, HitResult);
+	DidHit = HitResult.IsValidBlockingHit();
+	return DidHit ? HitResult.ImpactPoint : FVector::ZeroVector;
+}
+
+AActor* AEAWPlayerControllerBase::GetActorUnderCursor()
+{
+	FHitResult HitResult;
+	GetHitResultUnderCursor(ECollisionChannel::ECC_Visibility, false, HitResult);
+	return HitResult.GetActor();
 }
 
 bool AEAWPlayerControllerBase::TrySelectActor()
@@ -173,13 +159,6 @@ bool AEAWPlayerControllerBase::TrySelectActor()
 		return true;
 	}
 	return false;
-}
-
-AActor* AEAWPlayerControllerBase::GetActorUnderCursor()
-{
-	FHitResult HitResult;
-	GetHitResultUnderCursor(ECollisionChannel::ECC_Visibility, false, HitResult);
-	return HitResult.GetActor();
 }
 
 void AEAWPlayerControllerBase::AddSelectedActorToList(AActor* SelectedActor)

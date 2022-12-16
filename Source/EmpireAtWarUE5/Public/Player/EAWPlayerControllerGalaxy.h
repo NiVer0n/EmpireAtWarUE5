@@ -4,10 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Player/EAWPlayerControllerBase.h"
-#include "Components/TimelineComponent.h"
 #include "EAWPlayerControllerGalaxy.generated.h"
-
-class UCurveFloat;
 
 /**
  * 
@@ -18,35 +15,15 @@ class EMPIREATWARUE5_API AEAWPlayerControllerGalaxy : public AEAWPlayerControlle
 	GENERATED_BODY()
 
 protected:
-	virtual void BeginPlay() override;
-	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
-	virtual void PlayerTick(float DeltaTime) override;
-	virtual void EnhancedStartPrimaryAction(const FInputActionValue& Value) override;
-	virtual void EnhancedZoomCamera(const FInputActionValue& Value) override;
-	
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Zoom")
-	UCurveFloat* CurveFloat;
+	virtual void OnPossess(APawn* InPawn) override;
+	virtual void EnhancedZoom(const FInputActionValue& Value) override;
+
+	UFUNCTION()
+	void OnCameraTravelFinished();
 
 private:
 	AEAWPlayerControllerGalaxy();
 
-	void TimelineProgress(float Value);
-	void TimelineFinished();
-
-	FVector GetZoomedCameraLocation() const;
-
 	UPROPERTY(Transient)
 	AActor* CachedSelectedActor;
-
-	UPROPERTY()
-	bool bZoomInProgress;
-
-	UPROPERTY()
-	float ZoomValue;
-
-	UPROPERTY(Transient)
-	FTimeline CurveTimeline;
-
-	FOnTimelineFloatStatic OnTimelineProgress;
-	FOnTimelineEventStatic OnTimelineFinished;
 };
