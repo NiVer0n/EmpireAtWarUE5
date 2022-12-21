@@ -43,7 +43,7 @@ void AStarSystem::DeselectObject_Implementation()
 
 void AStarSystem::ZoomToObject_Implementation(bool IsZoomIn)
 {
-	SelectionComponent->SetCanBeSelected(!IsZoomIn);
 	SelectionComponent->SetOwnerSelected(!IsZoomIn);
+	SelectionComponent->SetCanBeSelected(!IsZoomIn);
 	NameComponent->SetVisibility(!IsZoomIn);
 }
