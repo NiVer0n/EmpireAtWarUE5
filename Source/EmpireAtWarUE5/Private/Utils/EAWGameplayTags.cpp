@@ -32,6 +32,7 @@ void FEAWGameplayTags::AddAllTags(UGameplayTagsManager& Manager)
 	AddTag(FACTION_PIRATES_TAG, "Faction.Pirates", "Non-playable faction.");
 	// HUD Tags
 	AddTag(WIDGETS_MINIMAP_TAG, "HUD.Widgets.Minimap", "Minimap widget.");
+	AddTag(WIDGETS_DATA_PANEL_TAG, "HUD.Widgets.DataPanel", "Widget for displaying player's resources, galaxy time control, etc.");
 }
 
 void FEAWGameplayTags::AddTag(FGameplayTag& OutTag, const ANSICHAR* TagName, const ANSICHAR* TagComment)

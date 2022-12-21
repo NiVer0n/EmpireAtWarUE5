@@ -5,26 +5,22 @@
 #include "Engine/EAWWidgetLayout.h"
 #include "Kismet/GameplayStatics.h"
 
-AEAWHUDBase::AEAWHUDBase()
-	: HUDWidget(nullptr)
+void AEAWHUDBase::PostInitializeComponents()
 {
-}
+	Super::PostInitializeComponents();
 
-void AEAWHUDBase::BeginPlay()
-{
-	if (!GetWorld() || !IsValid(HUDWidgetClass))
+	if (!GetWorld() || !ensure(IsValid(HUDWidgetClass)))
 	{
 		return;
 	}
 
 	HUDWidget = CreateWidget<UHUDWidget>(GetWorld(), HUDWidgetClass);
-	check(HUDWidget);
 	HUDWidget->AddToViewport();
 
 	const UEAWWidgetLayout* WidgetLayout = WidgetLayoutData.LoadSynchronous();
-	for (const TPair<TSoftClassPtr<UUserWidget>, FGameplayTag>& WidgetToCreate : WidgetLayout->GetWidgetLayoutData())
+	for (const auto& [WidgetClass, WidgetTag] : WidgetLayout->GetWidgetLayoutData())
 	{
-		UUserWidget* CreatedWidget = HUDWidget->CreateWidgetAtSuitablePoint(WidgetToCreate.Key, WidgetToCreate.Value);
-		CreatedWidgets.Emplace(WidgetToCreate.Value, CreatedWidget);
+		UUserWidget* CreatedWidget = HUDWidget->CreateWidgetAtSuitablePoint(WidgetClass, WidgetTag);
+		CreatedWidgets.Emplace(WidgetTag, CreatedWidget);
 	}
 }

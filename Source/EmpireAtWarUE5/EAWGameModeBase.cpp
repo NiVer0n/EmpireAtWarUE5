@@ -3,6 +3,7 @@
 #include "EAWGameModeBase.h"
 #include "Player/EAWPlayerPawnBase.h"
 #include "Player/EAWPlayerControllerGalaxy.h"
+#include "Player/EAWHUDBase.h"
 #include "Data/UniverseDataTable.h"
 #include "Gameplay/StarSystem.h"
 #include "Engine/EAWSettings.h"
@@ -13,6 +14,7 @@ AEAWGameModeBase::AEAWGameModeBase(const FObjectInitializer& ObjectInitializer)
 {
 	PlayerControllerClass = AEAWPlayerControllerGalaxy::StaticClass();
 	DefaultPawnClass = AEAWPlayerPawnBase::StaticClass();
+	HUDClass = AEAWHUDBase::StaticClass();
 }
 
 void AEAWGameModeBase::StartPlay()
@@ -20,6 +22,15 @@ void AEAWGameModeBase::StartPlay()
 	Super::StartPlay();
 
 	CreateUniverse();
+}
+
+void AEAWGameModeBase::PostLogin(APlayerController* NewPlayer)
+{
+	Super::PostLogin(NewPlayer);
+
+	AEAWPlayerControllerBase* PC = Cast<AEAWPlayerControllerBase>(NewPlayer);
+	check(PC);
+	PC->ApplyStartupData();
 }
 
 void AEAWGameModeBase::CreateUniverse()

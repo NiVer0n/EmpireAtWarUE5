@@ -58,6 +58,9 @@ public:
 	UPROPERTY(Config, EditAnywhere, BlueprintReadOnly, Category = "Tags|Widges", meta = (Categories = "HUD"))
 	FGameplayTag WIDGETS_MINIMAP_TAG;
 
+	UPROPERTY(Config, EditAnywhere, BlueprintReadOnly, Category = "Tags|Widges", meta = (Categories = "HUD"))
+	FGameplayTag WIDGETS_DATA_PANEL_TAG;
+
 protected:
 	//Registers all of the tags with the GameplayTags Manager
 	void AddAllTags(UGameplayTagsManager& Manager);

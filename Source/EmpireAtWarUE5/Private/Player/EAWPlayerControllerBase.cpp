@@ -9,18 +9,18 @@
 #include "InputActionValue.h"
 #include "EnhancedInputSubsystems.h"
 #include "Interfaces/Selectable.h"
-#include "Components/FactionComponent.h"
 #include "Engine/EAWSettings.h"
 #include "Kismet/KismetMathLibrary.h"
+#include "Components/FactionComponent.h"
+#include "Subsystems/ConsumableResourcesSubsystem.h"
 
 AEAWPlayerControllerBase::AEAWPlayerControllerBase()
 	: PlayerPawn(nullptr)
 	, SelectedActors()
 	, SelectionStartPoint(FVector2D::ZeroVector)
 {
+	// TODO: move this to APlayerState
 	FactionComponent = CreateDefaultSubobject<UFactionComponent>("FactionComponent");
-	// @TODO: Remove this when implementing faction choise
-	FactionComponent->SetOwnerFactionTag(GEAWGameplayTags.FACTION_EMPIRE_TAG);
 }
 
 void AEAWPlayerControllerBase::SetupInputComponent()
@@ -31,11 +31,9 @@ void AEAWPlayerControllerBase::SetupInputComponent()
 	bEnableClickEvents = true;
 	bEnableMouseOverEvents = true;
 	FInputModeGameAndUI InputMode;
-	InputMode.SetHideCursorDuringCapture(false);
-	SetInputMode(InputMode);
+	SetInputMode(InputMode.SetHideCursorDuringCapture(false));
 
-	UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(GetLocalPlayer());
-	check(Subsystem);
+	UEnhancedInputLocalPlayerSubsystem* Subsystem = GetLocalPlayer()->GetSubsystem<UEnhancedInputLocalPlayerSubsystem>();
 	check(GEAWSettings.GetInputConfigAsset());
 	Subsystem->ClearAllMappings();
 	Subsystem->AddMappingContext(GEAWSettings.GetInputConfigAsset()->GetMappingContext(), 0);
@@ -124,6 +122,15 @@ void AEAWPlayerControllerBase::EnhancedStartPrimaryAction()
 {
 	DeselectAllActors();
 	TrySelectActor();
+}
+
+void AEAWPlayerControllerBase::ApplyStartupData()
+{
+	// @TODO: Rewrite this when implementing faction choise
+	FactionComponent->SetOwnerFactionTag(GEAWGameplayTags.FACTION_EMPIRE_TAG);
+	UConsumableResourcesSubsystem* ResourceSubsystem = GetLocalPlayer()->GetSubsystem<UConsumableResourcesSubsystem>();
+	ResourceSubsystem->AddConsumableResource(EResourceTypes::Credits, 5000);
+	ResourceSubsystem->AddConsumableResource(EResourceTypes::Population, 100);
 }
 
 FVector AEAWPlayerControllerBase::GetMousePositionInWorldSpace()

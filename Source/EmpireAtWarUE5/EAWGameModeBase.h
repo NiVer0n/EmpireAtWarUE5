@@ -18,6 +18,7 @@ protected:
 	AEAWGameModeBase(const FObjectInitializer& ObjectInitializer);
 
 	virtual void StartPlay() override;
+	virtual void PostLogin(APlayerController* NewPlayer) override;
 
 private:
 	void CreateUniverse();

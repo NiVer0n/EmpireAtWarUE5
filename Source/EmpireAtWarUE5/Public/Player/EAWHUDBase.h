@@ -33,9 +33,7 @@ public:
 	}
 
 protected:
-	AEAWHUDBase();
-
-	virtual void BeginPlay() override;
+	virtual void PostInitializeComponents() override;
 
 	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Widgets")
 	TSoftObjectPtr<UEAWWidgetLayout> WidgetLayoutData;
@@ -43,7 +41,7 @@ protected:
 	UPROPERTY(BlueprintReadOnly, EditAnywhere, Category = "Widgets")
 	TSubclassOf<UHUDWidget> HUDWidgetClass;
 
-	UPROPERTY()
+	UPROPERTY(Transient)
 	UHUDWidget* HUDWidget;
 
 	UPROPERTY()

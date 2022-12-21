@@ -22,6 +22,9 @@ class EMPIREATWARUE5_API AEAWPlayerControllerBase : public APlayerController
 	GENERATED_BODY()
 
 public:
+	/* Sets player data on first game start or from save. */
+	void ApplyStartupData(/* @TODO: place startup data struct here. */);
+
 	/** Return mouse 2D position vector converted to 3d vector */
 	FVector GetMousePositionInWorldSpace();
 	FVector GetImpactPointUnderCursor(ECollisionChannel TraceChannel, bool TraceComplex, bool& DidHit);
