@@ -44,6 +44,6 @@ public:
 	FOnResourcesChanged OnResourcesChanged;
 
 	/* Map that contains all available resources for player. */
-	UPROPERTY(VisibleAnywhere, Category = "ConsumableResources")
+	UPROPERTY(SaveGame, VisibleAnywhere, Category = "ConsumableResources")
 	TMap<EResourceTypes, int32> ConsumableResources;
 };

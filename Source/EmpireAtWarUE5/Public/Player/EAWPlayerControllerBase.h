@@ -25,6 +25,12 @@ public:
 	/* Sets player data on first game start or from save. */
 	void ApplyStartupData(/* @TODO: place startup data struct here. */);
 
+	UFUNCTION(BlueprintCallable, Category = "GameTime")
+	void ToggleGamePause(bool InShouldPawnTick);
+
+	UFUNCTION(BlueprintCallable, Category = "GameTime")
+	void ToggleGameSpeed();
+
 	/** Return mouse 2D position vector converted to 3d vector */
 	FVector GetMousePositionInWorldSpace();
 	FVector GetImpactPointUnderCursor(ECollisionChannel TraceChannel, bool TraceComplex, bool& DidHit);

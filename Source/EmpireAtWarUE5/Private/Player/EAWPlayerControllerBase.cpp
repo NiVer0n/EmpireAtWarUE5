@@ -13,6 +13,7 @@
 #include "Kismet/KismetMathLibrary.h"
 #include "Components/FactionComponent.h"
 #include "Subsystems/ConsumableResourcesSubsystem.h"
+#include "Kismet/GameplayStatics.h"
 
 AEAWPlayerControllerBase::AEAWPlayerControllerBase()
 	: PlayerPawn(nullptr)
@@ -30,8 +31,7 @@ void AEAWPlayerControllerBase::SetupInputComponent()
 	bShowMouseCursor = true;
 	bEnableClickEvents = true;
 	bEnableMouseOverEvents = true;
-	FInputModeGameAndUI InputMode;
-	SetInputMode(InputMode.SetHideCursorDuringCapture(false));
+	SetInputMode(FInputModeGameAndUI().SetHideCursorDuringCapture(false));
 
 	UEnhancedInputLocalPlayerSubsystem* Subsystem = GetLocalPlayer()->GetSubsystem<UEnhancedInputLocalPlayerSubsystem>();
 	check(GEAWSettings.GetInputConfigAsset());
@@ -131,6 +131,34 @@ void AEAWPlayerControllerBase::ApplyStartupData()
 	UConsumableResourcesSubsystem* ResourceSubsystem = GetLocalPlayer()->GetSubsystem<UConsumableResourcesSubsystem>();
 	ResourceSubsystem->AddConsumableResource(EResourceTypes::Credits, 5000);
 	ResourceSubsystem->AddConsumableResource(EResourceTypes::Population, 100);
+}
+
+void AEAWPlayerControllerBase::ToggleGamePause(bool InShouldPawnTick)
+{
+	if (IsValid(PlayerPawn))
+	{
+		PlayerPawn->SetTickableWhenPaused(InShouldPawnTick);
+		bShouldPerformFullTickWhenPaused = InShouldPawnTick;
+	}
+
+	SetPause(!IsPaused());
+	IsPaused() ? SetInputMode(FInputModeGameAndUI().SetHideCursorDuringCapture(false)) : SetInputMode(FInputModeGameOnly());
+}
+
+void AEAWPlayerControllerBase::ToggleGameSpeed()
+{
+	if (GetWorld())
+	{
+		return;
+	}
+
+	const float NewGameSpeed = UGameplayStatics::GetGlobalTimeDilation(GetWorld()) == 1.0f ? GEAWSettings.GetGameSpeedMultiplier() : 1.0f;
+	UGameplayStatics::SetGlobalTimeDilation(GetWorld(), NewGameSpeed);
+	// Player camera shouldn't be affected by game speed.
+	if (IsValid(PlayerPawn))
+	{
+		PlayerPawn->CustomTimeDilation = 1.0f / NewGameSpeed;
+	}
 }
 
 FVector AEAWPlayerControllerBase::GetMousePositionInWorldSpace()

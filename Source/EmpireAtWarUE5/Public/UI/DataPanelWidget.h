@@ -4,9 +4,12 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
-#include "Components/TextBlock.h"
 #include "Subsystems/ConsumableResourcesSubsystem.h"
 #include "DataPanelWidget.generated.h"
+
+class UTextBlock;
+class UProgressBar;
+class UButton;
 
 /**
  * Class representing gameplay data: e.g. player resources, galaxy time control, etc.
@@ -20,15 +23,39 @@ protected:
 	virtual void NativeConstruct() override;
 	virtual void NativeDestruct() override;
 
-	UFUNCTION()
-	void RefreshResourceData(const EResourceTypes ResourceType, int32 Amount);
-
 	UPROPERTY(BlueprintReadOnly, Category = "References", meta = (BindWidget))
 	UTextBlock* CreditsCountText;
 
 	UPROPERTY(BlueprintReadOnly, Category = "References", meta = (BindWidget))
 	UTextBlock* PopulationCountText;
 
+	UPROPERTY(BlueprintReadOnly, Category = "References", meta = (BindWidget))
+	UProgressBar* PB_CurrentDay;
+
+	UPROPERTY(BlueprintReadOnly, Category = "References", meta = (BindWidget))
+	UTextBlock* CurrentDayText;
+
+	UPROPERTY(BlueprintReadOnly, Category = "References", meta = (BindWidget))
+	UButton* PauseGameButton;
+	 
+	UPROPERTY(BlueprintReadOnly, Category = "References", meta = (BindWidget))
+	UButton* SpeedUpTimeButton;
+
 private:
-	void HandleResourceChangedBindings(bool InBinded);
+	void HandleBindings(bool InBinded);
+
+	UFUNCTION()
+	void RefreshResourceData(const EResourceTypes ResourceType, int32 Amount);
+
+	UFUNCTION()
+	void UpdateCurrentDayProgressBar(float InCurrentTime, float InDayDuration);
+
+	UFUNCTION()
+	void UpdateCurrentDayText(int32 InDay);
+
+	UFUNCTION()
+	void OnPauseGameButtonPressed();
+	
+	UFUNCTION()
+	void OnSpeedUpTimeButtonPressed();
 };
