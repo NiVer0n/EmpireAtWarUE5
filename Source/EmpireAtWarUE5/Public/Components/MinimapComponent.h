@@ -4,14 +4,13 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
-#include "GameplayTagContainer.h"
 #include "MinimapComponent.generated.h"
 
-UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
+UCLASS(ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
 class EMPIREATWARUE5_API UMinimapComponent : public UActorComponent
 {
 	GENERATED_BODY()
-	
+
 protected:
 	UMinimapComponent();
 
@@ -21,7 +20,7 @@ protected:
 	UMaterialInstanceDynamic* CreateIconFromData();
 
 	UFUNCTION()
-	void ReloadMinimapIcon(FGameplayTag NewOwnerFactionTag);
+	void ReloadMinimapIcon();
 
 	UPROPERTY()
 	class UMinimapWidget* MinimapWidget;
@@ -37,4 +36,7 @@ protected:
 
 	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category = "MinimapSettings")
 	class UMaterial* MinimapIconMaterial;
+
+private:
+	void CreateMinimapWidget();
 };

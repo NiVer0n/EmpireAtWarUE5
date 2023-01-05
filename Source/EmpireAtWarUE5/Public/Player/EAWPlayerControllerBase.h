@@ -11,7 +11,6 @@ struct FInputActionValue;
 class UInputAction;
 class UDA_InputConfig;
 class UInputMappingContext;
-class UFactionComponent;
 
 /**
  * 
@@ -22,9 +21,6 @@ class EMPIREATWARUE5_API AEAWPlayerControllerBase : public APlayerController
 	GENERATED_BODY()
 
 public:
-	/* Sets player data on first game start or from save. */
-	void ApplyStartupData(/* @TODO: place startup data struct here. */);
-
 	UFUNCTION(BlueprintCallable, Category = "GameTime")
 	void ToggleGamePause(bool InShouldPawnTick);
 
@@ -36,8 +32,7 @@ public:
 	FVector GetImpactPointUnderCursor(ECollisionChannel TraceChannel, bool TraceComplex, bool& DidHit);
 	AActor* GetActorUnderCursor();
 	FORCEINLINE FVector2D GetSelectionStartPoint() const { return SelectionStartPoint; };
-	FORCEINLINE UFactionComponent* GetFactionComponent() const { return FactionComponent; }
-
+	
 protected:
 	AEAWPlayerControllerBase();
 
@@ -58,10 +53,6 @@ protected:
 
 	UPROPERTY()
 	TArray<AActor*> SelectedActors;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
-	UFactionComponent* FactionComponent;
-
 private:
 	void AddSelectedActorToList(AActor* SelectedActor);
 	void DeselectAllActors();

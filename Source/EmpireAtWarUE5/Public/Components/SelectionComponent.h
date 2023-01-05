@@ -4,7 +4,6 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
-#include "GameplayTagContainer.h"
 #include "SelectionComponent.generated.h"
 
 class UMaterialInterface;
@@ -30,7 +29,7 @@ protected:
 	USelectionComponent();
 
 	UFUNCTION()
-	void ReloadSelectionColor(FGameplayTag NewOwnerFactionTag);
+	void ReloadSelectionColor();
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Selection")
 	bool bCanBeSelected;

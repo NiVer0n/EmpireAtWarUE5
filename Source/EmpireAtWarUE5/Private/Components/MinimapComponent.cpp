@@ -21,29 +21,42 @@ void UMinimapComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
-	if (!GetWorld() || !GetOwner())
-	{
-		return;
-	}
-
-	if (const APlayerController* PC = UGameplayStatics::GetPlayerController(GetWorld(), 0))
-	{
-		if (AEAWHUDBase* HUD = Cast<AEAWHUDBase>(PC->GetHUD()))
-		{
-			MinimapWidget = HUD->GetDesiredWidget<UMinimapWidget>(GEAWGameplayTags.WIDGETS_MINIMAP_TAG);
-			if (IsValid(MinimapWidget))
-			{
-				PinnedMinimapObjectWidget = MinimapWidget->AddObjectToMinimap(GetOwner()->GetActorLocation());
-				PinnedMinimapObjectWidget->UpdateIcon(CreateIconFromData());
-			}
-		}
-	}
-
+	CreateMinimapWidget();
+	
 	FactionComponent = GetOwner()->FindComponentByClass<UFactionComponent>();
 	if (IsValid(FactionComponent))
 	{
 		FactionComponent->OnFactionControlChanged.AddDynamic(this, &UMinimapComponent::ReloadMinimapIcon);
 	}
+}
+
+void UMinimapComponent::CreateMinimapWidget()
+{
+	if (!GetWorld())
+	{
+		return;
+	}
+
+	const APlayerController* PC = UGameplayStatics::GetPlayerController(GetWorld(), 0);
+	if (!IsValid(PC))
+	{
+		return;
+	}
+
+	AEAWHUDBase* HUD = Cast<AEAWHUDBase>(PC->GetHUD());
+	if (!IsValid(HUD))
+	{
+		return;
+	}
+
+	MinimapWidget = HUD->GetDesiredWidget<UMinimapWidget>(GEAWGameplayTags.WIDGETS_MINIMAP_TAG);
+	if (!IsValid(MinimapWidget))
+	{
+		return;
+	}
+
+	PinnedMinimapObjectWidget = MinimapWidget->AddObjectToMinimap(GetOwner()->GetActorLocation());
+	PinnedMinimapObjectWidget->UpdateIcon(CreateIconFromData());
 }
 
 void UMinimapComponent::EndPlay(const EEndPlayReason::Type EndPlayReason)
@@ -67,12 +80,12 @@ UMaterialInstanceDynamic* UMinimapComponent::CreateIconFromData()
 	MinimapIconMaterialInstance->SetTextureParameterValue(TEXT("Icon"), MinimapIconTexture);
 	if (IsValid(FactionComponent))
 	{
-		MinimapIconMaterialInstance->SetVectorParameterValue(TEXT("Color"), FactionComponent->GetFactionColor());
+		MinimapIconMaterialInstance->SetVectorParameterValue(TEXT("Color"), FactionComponent->GetFactionColorForPlayer(0));
 	}
 	return MinimapIconMaterialInstance;
 }
 
-void UMinimapComponent::ReloadMinimapIcon(FGameplayTag NewOwnerFactionTag)
+void UMinimapComponent::ReloadMinimapIcon()
 {
 	if (IsValid(PinnedMinimapObjectWidget))
 	{

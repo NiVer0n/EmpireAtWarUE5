@@ -4,7 +4,6 @@
 
 #include "CoreMinimal.h"
 #include "Components/WidgetComponent.h"
-#include "GameplayTagContainer.h"
 #include "NameComponent.generated.h"
 
 class UNameWidget;
@@ -26,7 +25,7 @@ protected:
 	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 
 	UFUNCTION()
-	void ReloadNameColor(FGameplayTag NewOwnerFactionTag);
+	void ReloadNameColor();
 
 	UPROPERTY()
 	UNameWidget* NameWidget;

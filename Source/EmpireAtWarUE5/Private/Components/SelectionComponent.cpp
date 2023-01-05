@@ -14,9 +14,12 @@ void USelectionComponent::BeginPlay()
 	Super::BeginPlay();
 
 	AActor* Owner = GetOwner();
-	checkf(IsValid(Owner), TEXT("USelectionComponent::BeginPlay(): Owner is invalid!"));
-
-	ensureMsgf(IsValid(PlaneMesh), TEXT("USelectionComponent::BeginPlay(): PlaneMesh isn't set."));
+	if (!IsValid(Owner))
+	{
+		return;
+	}
+	
+	ensureMsgf(IsValid(PlaneMesh), TEXT("%s: PlaneMesh isn't set."), ANSI_TO_TCHAR(__FUNCTION__));
 	PlaneComponent = NewObject<UStaticMeshComponent>(Owner, TEXT("SelectionCirclePlane"));
 	PlaneComponent->AttachToComponent(Owner->GetRootComponent(), FAttachmentTransformRules::KeepRelativeTransform);
 	PlaneComponent->SetStaticMesh(PlaneMesh);
@@ -39,6 +42,8 @@ void USelectionComponent::EndPlay(const EEndPlayReason::Type EndPlayReason)
 	{
 		FactionComponent->OnFactionControlChanged.RemoveDynamic(this, &USelectionComponent::ReloadSelectionColor);
 	}
+
+	Super::EndPlay(EndPlayReason);
 }
 
 void USelectionComponent::SetOwnerSelected(bool InSelected)
@@ -54,7 +59,10 @@ void USelectionComponent::SetSelectionCircleColor(const FColor SelectionColor)
 	SelectionCircleMaterialInstance->SetVectorParameterValue(TEXT("Color"), SelectionColor);
 }
 
-void USelectionComponent::ReloadSelectionColor(FGameplayTag NewOwnerFactionTag)
+void USelectionComponent::ReloadSelectionColor()
 {
-	SetSelectionCircleColor(FactionComponent->GetFactionColor());
+	if (IsValid(FactionComponent))
+	{
+		SetSelectionCircleColor(FactionComponent->GetFactionColorForPlayer(0));
+	}
 }

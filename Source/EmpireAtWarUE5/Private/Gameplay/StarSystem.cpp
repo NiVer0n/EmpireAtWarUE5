@@ -28,7 +28,7 @@ void AStarSystem::BeginPlay()
 	MeshComponent->SetStaticMesh(StarSystemData->Mesh.Get());
 	NameComponent->SetName(StarSystemData->Name);
 
-	FactionComponent->OnFactionControlChanged.Broadcast(StarSystemData->FactionControl);
+	FactionComponent->SetNewFaction(StarSystemData->FactionControl);
 }
 
 void AStarSystem::SelectObject_Implementation()

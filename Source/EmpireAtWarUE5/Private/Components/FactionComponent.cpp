@@ -3,12 +3,12 @@
 #include "Components/FactionComponent.h"
 #include "Engine/EAWSettings.h"
 #include "Data/DA_Factions.h"
-#include "Player/EAWPlayerControllerBase.h"
+#include "Player/EAWPlayerStateBase.h"
 #include "Kismet/GameplayStatics.h"
 
 UFactionComponent::UFactionComponent()
 	: FactionsDataAsset(nullptr)
-	, OwnerFactionTag(FGameplayTag())
+	, TeamID(FGenericTeamId())
 { }
 
 void UFactionComponent::BeginPlay()
@@ -17,33 +17,64 @@ void UFactionComponent::BeginPlay()
 
 	FactionsDataAsset = GEAWSettings.GetFactionsDataAsset();
 	checkf(FactionsDataAsset, TEXT("%s: FactionsDataAsset is invalid."), ANSI_TO_TCHAR(__FUNCTION__));
-	OnFactionControlChanged.AddDynamic(this, &UFactionComponent::SetOwnerFactionTag);
 }
 
-void UFactionComponent::EndPlay(const EEndPlayReason::Type EndPlayReason)
+FColor UFactionComponent::GetFactionColorForPlayer(int32 PlayerIndex)
 {
-	OnFactionControlChanged.RemoveDynamic(this, &UFactionComponent::SetOwnerFactionTag);
+	if (!GetWorld() || !IsValid(FactionsDataAsset))
+	{
+		return FColor();
+	}
+	
+	const APlayerState* PlayerState = UGameplayStatics::GetPlayerState(GetWorld(), PlayerIndex);
+	if (!IsValid(PlayerState))
+	{
+		return FactionsDataAsset->GetFactionDataForTeamId(FactionsDataAsset->GetTeamIdFromGameplayTag(FactionsDataAsset->GetNeutralTeamTag())).Color;
+	}
+	
+	const ETeamAttitude::Type TeamAttitude = GetTeamAttitudeTowardsActor(PlayerState);
+	switch (TeamAttitude)
+	{
+		case ETeamAttitude::Type::Friendly:
+		{
+			// Player controlled actors gets ally color otherwise team color.
+			const FGenericTeamId ActorTeamId = GetActorTeamId(PlayerState);
+			return GetGenericTeamId() == ActorTeamId ? FactionsDataAsset->GetAllyColor() : FactionsDataAsset->GetTeamColor(ActorTeamId);
+			break;
+		}
+		case ETeamAttitude::Type::Hostile:
+		{
+			// Primary enemies gets enemy color for each other, everyone else receive team color.
+			const FGenericTeamId ActorTeamId = GetActorTeamId(PlayerState);
+			return FactionsDataAsset->IsPrimaryEnemies(GetGenericTeamId(), ActorTeamId) ? 
+				FactionsDataAsset->GetEnemyColor() : FactionsDataAsset->GetTeamColor(ActorTeamId);
+			break;
+		}
+		case ETeamAttitude::Type::Neutral:
+		{
+			return FactionsDataAsset->GetFactionDataForTeamId(FactionsDataAsset->GetTeamIdFromGameplayTag(FactionsDataAsset->GetNeutralTeamTag())).Color;
+			break;
+		}
+		default: break;
+	}
+	return FactionsDataAsset->GetFactionDataForTeamId(FactionsDataAsset->GetTeamIdFromGameplayTag(FactionsDataAsset->GetNeutralTeamTag())).Color;
 }
 
-FColor UFactionComponent::GetFactionColor() const
+ETeamAttitude::Type UFactionComponent::GetTeamAttitudeTowardsActor(const AActor* OtherActor)
 {
-	const AEAWPlayerControllerBase* PC = Cast<AEAWPlayerControllerBase>(UGameplayStatics::GetPlayerController(GetWorld(), 0));
-	if (!IsValid(PC))
-	{
-		return FColor::White;
-	}
+	return IsValid(OtherActor) ? FGenericTeamId::GetAttitude(GetGenericTeamId(), GetActorTeamId(OtherActor)) : ETeamAttitude::Neutral;
+}
 
-	const FGameplayTag PlayerTag = PC->GetFactionComponent()->GetOwnerFactionTag();
-	if (OwnerFactionTag.MatchesTagExact(PlayerTag))
-	{
-		return FactionsDataAsset->GetAllyColor();
-	}
-
-	const FFactionsData* SourceFactionData = FactionsDataAsset->GetFactionsData().Find(OwnerFactionTag);
-	check(SourceFactionData);
-	if (PlayerTag.MatchesTagExact(SourceFactionData->PrimaryEnemy))
-	{
-		return FactionsDataAsset->GetEnemyColor();
-	}
-	return SourceFactionData->Color;
+FGenericTeamId UFactionComponent::GetActorTeamId(const AActor* InActor) const
+{
+	check(IsValid(InActor));
+	const UFactionComponent* FactionComponent = InActor->FindComponentByClass<UFactionComponent>();
+	check(IsValid(FactionComponent));
+	return FactionComponent->GetGenericTeamId();
+}
+// TODO: remove this after implementing faction select
+void UFactionComponent::SetNewFaction(FGameplayTag NewFactionTag)
+{
+	SetGenericTeamId(FactionsDataAsset->GetTeamIdFromGameplayTag(NewFactionTag));
+	OnFactionControlChanged.Broadcast();
 }

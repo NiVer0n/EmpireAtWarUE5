@@ -27,6 +27,8 @@ void UNameComponent::EndPlay(const EEndPlayReason::Type EndPlayReason)
 	{
 		FactionComponent->OnFactionControlChanged.RemoveDynamic(this, &UNameComponent::ReloadNameColor);
 	}
+
+	Super::EndPlay(EndPlayReason);
 }
 
 void UNameComponent::SetName(FText InName)
@@ -39,7 +41,10 @@ void UNameComponent::SetNameColor(FColor InColor)
 	NameWidget->GetTextBlock()->SetColorAndOpacity(FSlateColor(InColor));
 }
 
-void UNameComponent::ReloadNameColor(FGameplayTag NewOwnerFactionTag)
+void UNameComponent::ReloadNameColor()
 {
-	SetNameColor(FactionComponent->GetFactionColor());
+	if (IsValid(FactionComponent))
+	{
+		SetNameColor(FactionComponent->GetFactionColorForPlayer(0));
+	}
 }
