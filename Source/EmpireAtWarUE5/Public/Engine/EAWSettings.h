@@ -6,9 +6,10 @@
 #include "Engine/DeveloperSettings.h"
 #include "Data/UniverseDataTable.h"
 #include "Data/DA_InputConfig.h"
+#include "Data/DA_Universe.h"
+#include "Gameplay/StarSystem.h"
 #include "EAWSettings.generated.h"
 
-class AStarSystem;
 class UDA_Factions;
 
 #define GEAWSettings (*UEAWSettings::GetEAWSettings())
@@ -23,29 +24,33 @@ class EMPIREATWARUE5_API UEAWSettings : public UDeveloperSettings
 
 public:
 	FORCEINLINE static const UEAWSettings* GetEAWSettings() { return GetDefault<UEAWSettings>(); }
-	FORCEINLINE UDataTable* GetUniverseDataTable() const { return UniverseDataTablePath.LoadSynchronous(); }
-	FORCEINLINE TSubclassOf<AStarSystem> GetStarSystemClass() const { return StarSystemClass; }
+	FORCEINLINE UDataTable* GetCampaignDataTable() const { return CampaignDataTable.LoadSynchronous(); }
+	FORCEINLINE UDA_Universe* GetUniverseDataAsset() const { return UniverseData.LoadSynchronous(); }
+	FORCEINLINE TSubclassOf<AStarSystem> GetStarSystemClass() const { return StarSystemClass.LoadSynchronous(); }
 	FORCEINLINE int32 GetGalaxyDayDuration() const { return GalaxyDayDuration; }
 	FORCEINLINE float GetGameSpeedMultiplier() const { return GameSpeedMultiplier; }
 	FORCEINLINE UDA_Factions* GetFactionsDataAsset() const { return FactionsDataAsset.LoadSynchronous(); }
 	FORCEINLINE UDA_InputConfig* GetInputConfigAsset() const { return InputConfigAsset.LoadSynchronous(); }
 
 protected:
-	UPROPERTY(Config, EditDefaultsOnly, BlueprintReadOnly, Category = "References|Universe")
-	TSoftObjectPtr<UDataTable> UniverseDataTablePath;
+	UPROPERTY(Config, EditAnywhere, BlueprintReadOnly, Category = "References|Universe")
+	TSoftObjectPtr<UDataTable> CampaignDataTable;
 
-	UPROPERTY(Config, EditDefaultsOnly, BlueprintReadOnly, Category = "References|Universe")
-	TSubclassOf<AStarSystem> StarSystemClass;
+	UPROPERTY(Config, EditAnywhere, BlueprintReadOnly, Category = "References|Universe")
+	TSoftClassPtr<AStarSystem> StarSystemClass;
+
+	UPROPERTY(Config, EditAnywhere, BlueprintReadOnly, Category = "GameSettings|Universe")
+	TSoftObjectPtr<UDA_Universe> UniverseData;
 	
-	UPROPERTY(Config, EditDefaultsOnly, BlueprintReadOnly, Category = "GameSettings|Universe", meta = (Units = Seconds))
+	UPROPERTY(Config, EditAnywhere, BlueprintReadOnly, Category = "GameSettings|Universe", meta = (Units = Seconds))
 	int32 GalaxyDayDuration;
 	
-	UPROPERTY(Config, EditDefaultsOnly, BlueprintReadOnly, Category = "GameSettings|Universe")
+	UPROPERTY(Config, EditAnywhere, BlueprintReadOnly, Category = "GameSettings|Universe")
 	float GameSpeedMultiplier = 2.0f;
 
-	UPROPERTY(Config, EditDefaultsOnly, BlueprintReadOnly, Category = "References|Factions")
+	UPROPERTY(Config, EditAnywhere, BlueprintReadOnly, Category = "References|Factions")
 	TSoftObjectPtr<UDA_Factions> FactionsDataAsset;
 	
-	UPROPERTY(Config, EditDefaultsOnly, BlueprintReadOnly, Category = "References|Input")
+	UPROPERTY(Config, EditAnywhere, BlueprintReadOnly, Category = "References|Input")
 	TSoftObjectPtr<UDA_InputConfig> InputConfigAsset;
 };

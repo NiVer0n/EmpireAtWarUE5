@@ -12,10 +12,9 @@ class EMPIREATWARUE5_API UNameWidget : public UUserWidget
 {
 	GENERATED_BODY()
 
-public:
-	FORCEINLINE UTextBlock* GetTextBlock() const { return TextBlock; }
-
 protected:
 	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
 	UTextBlock* TextBlock;
+
+	friend class UNameComponent;
 };

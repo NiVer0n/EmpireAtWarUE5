@@ -1,11 +1,16 @@
 // NiVeron Games 2022. All rights reserved.
 
 #include "Components/SelectionComponent.h"
-#include "Components/FactionComponent.h"
 
 USelectionComponent::USelectionComponent()
-	: bCanBeSelected(true)
+	: PlaneComponent(nullptr)
+	, PlaneMesh(nullptr)
+	, SelectionMaterial(nullptr)
+	, SelectedSound(nullptr)
+	, bCanBeSelected(true)
+	, bIsSelected(false)
 	, bHovered(false)
+	, SelectionMaterialInstance(nullptr)
 {
 }
 
@@ -24,26 +29,10 @@ void USelectionComponent::BeginPlay()
 	PlaneComponent->AttachToComponent(Owner->GetRootComponent(), FAttachmentTransformRules::KeepRelativeTransform);
 	PlaneComponent->SetStaticMesh(PlaneMesh);
 	PlaneComponent->SetRelativeScale3D(FVector(2.0f));
-	SelectionCircleMaterialInstance = UMaterialInstanceDynamic::Create(SelectionCircleMaterial, this);
-	PlaneComponent->SetMaterial(0, SelectionCircleMaterialInstance);
+	SelectionMaterialInstance = UMaterialInstanceDynamic::Create(SelectionMaterial, this);
+	PlaneComponent->SetMaterial(0, SelectionMaterialInstance);
 	PlaneComponent->SetVisibility(false);
 	PlaneComponent->RegisterComponent();
-
-	FactionComponent = Owner->FindComponentByClass<UFactionComponent>();
-	if (IsValid(FactionComponent))
-	{
-		FactionComponent->OnFactionControlChanged.AddDynamic(this, &USelectionComponent::ReloadSelectionColor);
-	}
-}
-
-void USelectionComponent::EndPlay(const EEndPlayReason::Type EndPlayReason)
-{
-	if (IsValid(FactionComponent))
-	{
-		FactionComponent->OnFactionControlChanged.RemoveDynamic(this, &USelectionComponent::ReloadSelectionColor);
-	}
-
-	Super::EndPlay(EndPlayReason);
 }
 
 void USelectionComponent::SetOwnerSelected(bool InSelected)
@@ -54,15 +43,7 @@ void USelectionComponent::SetOwnerSelected(bool InSelected)
 	}
 }
 
-void USelectionComponent::SetSelectionCircleColor(const FColor SelectionColor)
+void USelectionComponent::SetSelectionColor(const FColor SelectionColor)
 {
-	SelectionCircleMaterialInstance->SetVectorParameterValue(TEXT("Color"), SelectionColor);
-}
-
-void USelectionComponent::ReloadSelectionColor()
-{
-	if (IsValid(FactionComponent))
-	{
-		SetSelectionCircleColor(FactionComponent->GetFactionColorForPlayer(0));
-	}
+	SelectionMaterialInstance->SetVectorParameterValue(TEXT("Color"), SelectionColor);
 }

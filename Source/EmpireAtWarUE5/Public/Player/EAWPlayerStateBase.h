@@ -6,6 +6,7 @@
 #include "GameFramework/PlayerState.h"
 #include "GameplayTagContainer.h"
 #include "Subsystems/ConsumableResourcesSubsystem.h"
+#include "Interfaces/Factions.h"
 #include "EAWPlayerStateBase.generated.h"
 
 class UFactionComponent;
@@ -31,7 +32,7 @@ struct FStartupData
  * 
  */
 UCLASS()
-class EMPIREATWARUE5_API AEAWPlayerStateBase : public APlayerState
+class EMPIREATWARUE5_API AEAWPlayerStateBase : public APlayerState, public IFactions
 {
 	GENERATED_BODY()
 
@@ -40,6 +41,8 @@ public:
 
 	/* Sets player data on first game start or from save. */
 	void ApplyStartupData(FStartupData StartupData);
+
+	virtual void SetNewFaction_Implementation(FGameplayTag InNewFactionTag) override;
 
 protected:
 	AEAWPlayerStateBase();

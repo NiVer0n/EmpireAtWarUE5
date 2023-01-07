@@ -4,49 +4,58 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "Data/UniverseDataTable.h"
 #include "Interfaces/Selectable.h"
 #include "Interfaces/Zoomable.h"
+#include "Interfaces/Factions.h"
 #include "StarSystem.generated.h"
+
+class UDA_StarSystem;
+class USphereComponent;
+class USelectionComponent;
+class UNameComponent;
+class UFactionComponent;
+class UMinimapComponent;
 
 /**
  * Base class of celestial body
  */
 UCLASS()
-class EMPIREATWARUE5_API AStarSystem : public AActor, public ISelectable, public IZoomable
+class EMPIREATWARUE5_API AStarSystem : public AActor, public ISelectable, public IZoomable, public IFactions
 {
 	GENERATED_BODY()
 
 public:
-	FORCEINLINE void SetStarSystemData(FStarSystemData* InStarSystemData) { StarSystemData = InStarSystemData; }
+	FORCEINLINE void SetStarSystemData(UDA_StarSystem* InStarSystemData) { StarSystemData = InStarSystemData; }
 	
 	virtual void SelectObject_Implementation() override;
 	virtual void DeselectObject_Implementation() override;
-
 	virtual void ZoomToObject_Implementation(bool IsZoomIn) override;
+	virtual void SetNewFaction_Implementation(FGameplayTag InNewFactionTag) override;
 
 protected:
 	AStarSystem();
 
 	virtual void BeginPlay() override;
+	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
-	class USphereComponent* SphereComponent;
+	USphereComponent* SphereComponent;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	UStaticMeshComponent* MeshComponent;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
-	class USelectionComponent* SelectionComponent;
+	USelectionComponent* SelectionComponent;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
-	class UNameComponent* NameComponent;
+	UNameComponent* NameComponent;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
-	class UFactionComponent* FactionComponent;
+	UFactionComponent* FactionComponent;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
-	class UMinimapComponent* MinimapComponent;
+	UMinimapComponent* MinimapComponent;
 
-	FStarSystemData* StarSystemData;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "GameplayData")
+	UDA_StarSystem* StarSystemData;
 };

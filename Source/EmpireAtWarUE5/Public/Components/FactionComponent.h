@@ -10,7 +10,7 @@
 
 class UDA_Factions;
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnFactionControlChanged);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnFactionControlChanged, FColor, NewFactionControlColor);
 
 UCLASS(ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
 class EMPIREATWARUE5_API UFactionComponent : public UActorComponent, public IGenericTeamAgentInterface
@@ -22,14 +22,14 @@ public:
 	FColor GetFactionColorForPlayer(int32 PlayerIndex);
 
 	UFUNCTION(BlueprintCallable, Category = "Team Affiliation")
-	virtual void SetGenericTeamId(const FGenericTeamId& NewTeamID) override { TeamID = NewTeamID; }
-
-	UFUNCTION(BlueprintCallable, Category = "Team Affiliation")
 	virtual FGenericTeamId GetGenericTeamId() const override { return TeamID; }
 
 	UFUNCTION(BlueprintCallable, Category = "Team Affiliation")
 	ETeamAttitude::Type GetTeamAttitudeTowardsActor(const AActor* OtherActor);
-	// TODO: remove this after implementing faction select
+
+	UFUNCTION(BlueprintCallable, Category = "Team Affiliation")
+	FORCEINLINE UDA_Factions* GetFactionsDataAsset() const { return FactionsDataAsset; }
+
 	UFUNCTION(BlueprintCallable, Category = "Team Affiliation")
 	void SetNewFaction(FGameplayTag NewFactionTag);
 

@@ -62,7 +62,7 @@ protected:
 private:
 	FGenericTeamId GetTeamIdFromGameplayTag(FGameplayTag InGameplayTag);
 	FGameplayTag GetGameplayTagFromTeamID(FGenericTeamId TeamId);
-	FFactionsData GetFactionDataForTeamId(FGenericTeamId TeamId);
+	FFactionsData GetFactionDataForTeamID(FGenericTeamId TeamId);
 
 	friend class UFactionComponent;
 };

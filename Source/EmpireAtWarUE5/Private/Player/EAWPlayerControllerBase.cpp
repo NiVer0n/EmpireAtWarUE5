@@ -143,6 +143,7 @@ void AEAWPlayerControllerBase::ToggleGameSpeed()
 	// Player camera shouldn't be affected by game speed.
 	if (IsValid(PlayerPawn))
 	{
+		check(NewGameSpeed != 0.0f);
 		PlayerPawn->CustomTimeDilation = 1.0f / NewGameSpeed;
 	}
 }

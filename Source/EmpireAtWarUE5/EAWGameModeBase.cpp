@@ -6,6 +6,8 @@
 #include "Player/EAWPlayerStateBase.h"
 #include "Player/EAWHUDBase.h"
 #include "Data/UniverseDataTable.h"
+#include "Data/DA_StarSystem.h"
+#include "Data/DA_Universe.h"
 #include "Gameplay/StarSystem.h"
 #include "Engine/EAWSettings.h"
 
@@ -26,27 +28,29 @@ void AEAWGameModeBase::StartPlay()
 	CreateUniverse();
 }
 
-void AEAWGameModeBase::PostLogin(APlayerController* NewPlayer)
-{
-	Super::PostLogin(NewPlayer);
-}
-
 void AEAWGameModeBase::CreateUniverse()
 {
-	const UDataTable* UniverseData = GEAWSettings.GetUniverseDataTable();
-	checkf(UniverseData, TEXT("%s: UniverseData is invalid."), ANSI_TO_TCHAR(__FUNCTION__));
-
+	const UDataTable* CampaignDataTable = GEAWSettings.GetCampaignDataTable();
+	checkf(CampaignDataTable, TEXT("%s: UniverseData is invalid."), ANSI_TO_TCHAR(__FUNCTION__));
 	const TSubclassOf<AStarSystem> StarSystemClass = GEAWSettings.GetStarSystemClass();
 	checkf(StarSystemClass, TEXT("%s: StarSystemClass is invalid."), ANSI_TO_TCHAR(__FUNCTION__));
 
-	for (FName& RowName : UniverseData->GetRowNames())
+	for (const FName& RowName : CampaignDataTable->GetRowNames())
 	{
-		if (FStarSystemData* Data = UniverseData->FindRow<FStarSystemData>(RowName, FString()))
+		const FCampaignData* CampaignData = CampaignDataTable->FindRow<FCampaignData>(RowName, FString());
+		checkf(CampaignData, TEXT("%s: UniverseData is invalid."), ANSI_TO_TCHAR(__FUNCTION__));
+
+		const TMap<FGameplayTag, UDA_StarSystem*> UniverseData = GEAWSettings.GetUniverseDataAsset()->StarSystemsData;
+		UDA_StarSystem* StarSystemData = *UniverseData.Find(CampaignData->StarSystemTag);
+		check(StarSystemData);
+
+		AStarSystem* StarSystem = GetWorld()->SpawnActorDeferred<AStarSystem>(StarSystemClass, FTransform(StarSystemData->Position));
+		StarSystem->SetStarSystemData(StarSystemData);
+		StarSystem->FinishSpawning(FTransform(StarSystemData->Position));
+		if (StarSystem->Implements<UFactions>())
 		{
-			AStarSystem* CelestialBody = GetWorld()->SpawnActorDeferred<AStarSystem>(StarSystemClass, FTransform(Data->Position), nullptr, nullptr, ESpawnActorCollisionHandlingMethod::AlwaysSpawn);
-			CelestialBody->SetStarSystemData(Data);
-			CelestialBody->FinishSpawning(FTransform(Data->Position));
-			UniverseMap.Add(RowName, CelestialBody);
+			IFactions::Execute_SetNewFaction(StarSystem, CampaignData->DefaultFactionControl);
 		}
+		UniverseMap.Add(RowName, StarSystem);
 	}
 }

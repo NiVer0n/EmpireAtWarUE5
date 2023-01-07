@@ -11,25 +11,21 @@ class EMPIREATWARUE5_API UMinimapComponent : public UActorComponent
 {
 	GENERATED_BODY()
 
+public:
+	UFUNCTION()
+	void ReloadMinimapIcon(FColor IconColor);
+
 protected:
 	UMinimapComponent();
 
 	virtual void BeginPlay() override;
-	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
-
-	UMaterialInstanceDynamic* CreateIconFromData();
-
-	UFUNCTION()
-	void ReloadMinimapIcon();
+	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override; 
 
 	UPROPERTY()
 	class UMinimapWidget* MinimapWidget;
 
 	UPROPERTY()
 	class UMinimapObjectWidget* PinnedMinimapObjectWidget;
-
-	UPROPERTY()
-	class UFactionComponent* FactionComponent;
 
 	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category = "MinimapSettings")
 	class UTexture2D* MinimapIconTexture;
@@ -39,4 +35,7 @@ protected:
 
 private:
 	void CreateMinimapWidget();
+
+	UPROPERTY()
+	UMaterialInstanceDynamic* MinimapIconMaterialInstance;
 };

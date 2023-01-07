@@ -61,6 +61,139 @@ public:
 	UPROPERTY(Config, EditAnywhere, BlueprintReadOnly, Category = "Tags|Widges", meta = (Categories = "HUD"))
 	FGameplayTag WIDGETS_DATA_PANEL_TAG;
 
+	// Star systems Tags
+	UPROPERTY(Config, EditAnywhere, BlueprintReadOnly, Category = "Tags|Gameplay", meta = (Categories = "Gameplay|StarSystems"))
+	FGameplayTag GAMEPLAY_STARSYSTEM_ABREGADORAE_TAG;
+	
+	UPROPERTY(Config, EditAnywhere, BlueprintReadOnly, Category = "Tags|Gameplay", meta = (Categories = "Gameplay|StarSystems"))
+	FGameplayTag GAMEPLAY_STARSYSTEM_AETENII_TAG;
+	
+	UPROPERTY(Config, EditAnywhere, BlueprintReadOnly, Category = "Tags|Gameplay", meta = (Categories = "Gameplay|StarSystems"))
+	FGameplayTag GAMEPLAY_STARSYSTEM_ALDERAAN_TAG;
+	
+	UPROPERTY(Config, EditAnywhere, BlueprintReadOnly, Category = "Tags|Gameplay", meta = (Categories = "Gameplay|StarSystems"))
+	FGameplayTag GAMEPLAY_STARSYSTEM_ALZOCIII_TAG;
+	
+	UPROPERTY(Config, EditAnywhere, BlueprintReadOnly, Category = "Tags|Gameplay", meta = (Categories = "Gameplay|StarSystems"))
+	FGameplayTag GAMEPLAY_STARSYSTEM_ANAXES_TAG;
+	
+	UPROPERTY(Config, EditAnywhere, BlueprintReadOnly, Category = "Tags|Gameplay", meta = (Categories = "Gameplay|StarSystems"))
+	FGameplayTag GAMEPLAY_STARSYSTEM_ATZERRI_TAG;
+	
+	UPROPERTY(Config, EditAnywhere, BlueprintReadOnly, Category = "Tags|Gameplay", meta = (Categories = "Gameplay|StarSystems"))
+	FGameplayTag GAMEPLAY_STARSYSTEM_BESPIN_TAG;
+	
+	UPROPERTY(Config, EditAnywhere, BlueprintReadOnly, Category = "Tags|Gameplay", meta = (Categories = "Gameplay|StarSystems"))
+	FGameplayTag GAMEPLAY_STARSYSTEM_BESTINE_TAG;
+	
+	UPROPERTY(Config, EditAnywhere, BlueprintReadOnly, Category = "Tags|Gameplay", meta = (Categories = "Gameplay|StarSystems"))
+	FGameplayTag GAMEPLAY_STARSYSTEM_BONADAN_TAG;
+	
+	UPROPERTY(Config, EditAnywhere, BlueprintReadOnly, Category = "Tags|Gameplay", meta = (Categories = "Gameplay|StarSystems"))
+	FGameplayTag GAMEPLAY_STARSYSTEM_BOTHAWUI_TAG;
+	
+	UPROPERTY(Config, EditAnywhere, BlueprintReadOnly, Category = "Tags|Gameplay", meta = (Categories = "Gameplay|StarSystems"))
+	FGameplayTag GAMEPLAY_STARSYSTEM_BYSS_TAG;
+	
+	UPROPERTY(Config, EditAnywhere, BlueprintReadOnly, Category = "Tags|Gameplay", meta = (Categories = "Gameplay|StarSystems"))
+	FGameplayTag GAMEPLAY_STARSYSTEM_CARIDA_TAG;
+	
+	UPROPERTY(Config, EditAnywhere, BlueprintReadOnly, Category = "Tags|Gameplay", meta = (Categories = "Gameplay|StarSystems"))
+	FGameplayTag GAMEPLAY_STARSYSTEM_CORELLIA_TAG;
+	
+	UPROPERTY(Config, EditAnywhere, BlueprintReadOnly, Category = "Tags|Gameplay", meta = (Categories = "Gameplay|StarSystems"))
+	FGameplayTag GAMEPLAY_STARSYSTEM_CORULAG_TAG;
+	
+	UPROPERTY(Config, EditAnywhere, BlueprintReadOnly, Category = "Tags|Gameplay", meta = (Categories = "Gameplay|StarSystems"))
+	FGameplayTag GAMEPLAY_STARSYSTEM_CORUSCANT_TAG;
+	
+	UPROPERTY(Config, EditAnywhere, BlueprintReadOnly, Category = "Tags|Gameplay", meta = (Categories = "Gameplay|StarSystems"))
+	FGameplayTag GAMEPLAY_STARSYSTEM_DAGOBAH_TAG;
+	
+	UPROPERTY(Config, EditAnywhere, BlueprintReadOnly, Category = "Tags|Gameplay", meta = (Categories = "Gameplay|StarSystems"))
+	FGameplayTag GAMEPLAY_STARSYSTEM_DANTOOINE_TAG;
+	
+	UPROPERTY(Config, EditAnywhere, BlueprintReadOnly, Category = "Tags|Gameplay", meta = (Categories = "Gameplay|StarSystems"))
+	FGameplayTag GAMEPLAY_STARSYSTEM_ENDOR_TAG;
+	
+	UPROPERTY(Config, EditAnywhere, BlueprintReadOnly, Category = "Tags|Gameplay", meta = (Categories = "Gameplay|StarSystems"))
+	FGameplayTag GAMEPLAY_STARSYSTEM_ERIADU_TAG;
+	
+	UPROPERTY(Config, EditAnywhere, BlueprintReadOnly, Category = "Tags|Gameplay", meta = (Categories = "Gameplay|StarSystems"))
+	FGameplayTag GAMEPLAY_STARSYSTEM_FONDOR_TAG;
+	
+	UPROPERTY(Config, EditAnywhere, BlueprintReadOnly, Category = "Tags|Gameplay", meta = (Categories = "Gameplay|StarSystems"))
+	FGameplayTag GAMEPLAY_STARSYSTEM_FRESIA_TAG;
+	
+	UPROPERTY(Config, EditAnywhere, BlueprintReadOnly, Category = "Tags|Gameplay", meta = (Categories = "Gameplay|StarSystems"))
+	FGameplayTag GAMEPLAY_STARSYSTEM_GEONOSIS_TAG;
+	
+	UPROPERTY(Config, EditAnywhere, BlueprintReadOnly, Category = "Tags|Gameplay", meta = (Categories = "Gameplay|StarSystems"))
+	FGameplayTag GAMEPLAY_STARSYSTEM_HOTH_TAG;
+	
+	UPROPERTY(Config, EditAnywhere, BlueprintReadOnly, Category = "Tags|Gameplay", meta = (Categories = "Gameplay|StarSystems"))
+	FGameplayTag GAMEPLAY_STARSYSTEM_ILUM_TAG;
+	
+	UPROPERTY(Config, EditAnywhere, BlueprintReadOnly, Category = "Tags|Gameplay", meta = (Categories = "Gameplay|StarSystems"))
+	FGameplayTag GAMEPLAY_STARSYSTEM_JABIIM_TAG;
+	
+	UPROPERTY(Config, EditAnywhere, BlueprintReadOnly, Category = "Tags|Gameplay", meta = (Categories = "Gameplay|StarSystems"))
+	FGameplayTag GAMEPLAY_STARSYSTEM_KAMINO_TAG;
+	
+	UPROPERTY(Config, EditAnywhere, BlueprintReadOnly, Category = "Tags|Gameplay", meta = (Categories = "Gameplay|StarSystems"))
+	FGameplayTag GAMEPLAY_STARSYSTEM_KASHYYYK_TAG;
+	
+	UPROPERTY(Config, EditAnywhere, BlueprintReadOnly, Category = "Tags|Gameplay", meta = (Categories = "Gameplay|StarSystems"))
+	FGameplayTag GAMEPLAY_STARSYSTEM_KESSEL_TAG;
+	
+	UPROPERTY(Config, EditAnywhere, BlueprintReadOnly, Category = "Tags|Gameplay", meta = (Categories = "Gameplay|StarSystems"))
+	FGameplayTag GAMEPLAY_STARSYSTEM_KORRIBAN_TAG;
+	
+	UPROPERTY(Config, EditAnywhere, BlueprintReadOnly, Category = "Tags|Gameplay", meta = (Categories = "Gameplay|StarSystems"))
+	FGameplayTag GAMEPLAY_STARSYSTEM_KUAT_TAG;
+	
+	UPROPERTY(Config, EditAnywhere, BlueprintReadOnly, Category = "Tags|Gameplay", meta = (Categories = "Gameplay|StarSystems"))
+	FGameplayTag GAMEPLAY_STARSYSTEM_MANAAN_TAG;
+	
+	UPROPERTY(Config, EditAnywhere, BlueprintReadOnly, Category = "Tags|Gameplay", meta = (Categories = "Gameplay|StarSystems"))
+	FGameplayTag GAMEPLAY_STARSYSTEM_MONCALAMARI_TAG;
+	
+	UPROPERTY(Config, EditAnywhere, BlueprintReadOnly, Category = "Tags|Gameplay", meta = (Categories = "Gameplay|StarSystems"))
+	FGameplayTag GAMEPLAY_STARSYSTEM_NABOO_TAG;
+	
+	UPROPERTY(Config, EditAnywhere, BlueprintReadOnly, Category = "Tags|Gameplay", meta = (Categories = "Gameplay|StarSystems"))
+	FGameplayTag GAMEPLAY_STARSYSTEM_NALHUTTA_TAG;
+	
+	UPROPERTY(Config, EditAnywhere, BlueprintReadOnly, Category = "Tags|Gameplay", meta = (Categories = "Gameplay|StarSystems"))
+	FGameplayTag GAMEPLAY_STARSYSTEM_POLUS_TAG;
+	
+	UPROPERTY(Config, EditAnywhere, BlueprintReadOnly, Category = "Tags|Gameplay", meta = (Categories = "Gameplay|StarSystems"))
+	FGameplayTag GAMEPLAY_STARSYSTEM_RYLOTH_TAG;
+	
+	UPROPERTY(Config, EditAnywhere, BlueprintReadOnly, Category = "Tags|Gameplay", meta = (Categories = "Gameplay|StarSystems"))
+	FGameplayTag GAMEPLAY_STARSYSTEM_SHOLA_TAG;
+	
+	UPROPERTY(Config, EditAnywhere, BlueprintReadOnly, Category = "Tags|Gameplay", meta = (Categories = "Gameplay|StarSystems"))
+	FGameplayTag GAMEPLAY_STARSYSTEM_SULLUST_TAG;
+	
+	UPROPERTY(Config, EditAnywhere, BlueprintReadOnly, Category = "Tags|Gameplay", meta = (Categories = "Gameplay|StarSystems"))
+	FGameplayTag GAMEPLAY_STARSYSTEM_TARIS_TAG;
+	
+	UPROPERTY(Config, EditAnywhere, BlueprintReadOnly, Category = "Tags|Gameplay", meta = (Categories = "Gameplay|StarSystems"))
+	FGameplayTag GAMEPLAY_STARSYSTEM_TATOOINE_TAG;
+	
+	UPROPERTY(Config, EditAnywhere, BlueprintReadOnly, Category = "Tags|Gameplay", meta = (Categories = "Gameplay|StarSystems"))
+	FGameplayTag GAMEPLAY_STARSYSTEM_THYFERRA_TAG;
+	
+	UPROPERTY(Config, EditAnywhere, BlueprintReadOnly, Category = "Tags|Gameplay", meta = (Categories = "Gameplay|StarSystems"))
+	FGameplayTag GAMEPLAY_STARSYSTEM_VERGESSO_TAG;
+	
+	UPROPERTY(Config, EditAnywhere, BlueprintReadOnly, Category = "Tags|Gameplay", meta = (Categories = "Gameplay|StarSystems"))
+	FGameplayTag GAMEPLAY_STARSYSTEM_WAYLAND_TAG;
+	
+	UPROPERTY(Config, EditAnywhere, BlueprintReadOnly, Category = "Tags|Gameplay", meta = (Categories = "Gameplay|StarSystems"))
+	FGameplayTag GAMEPLAY_STARSYSTEM_YAVINIV_TAG;
+
 protected:
 	//Registers all of the tags with the GameplayTags Manager
 	void AddAllTags(UGameplayTagsManager& Manager);

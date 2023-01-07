@@ -7,7 +7,6 @@
 #include "NameComponent.generated.h"
 
 class UNameWidget;
-class UFactionComponent;
 
 UCLASS(ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
 class EMPIREATWARUE5_API UNameComponent : public UWidgetComponent
@@ -16,20 +15,15 @@ class EMPIREATWARUE5_API UNameComponent : public UWidgetComponent
 
 public:
 	void SetName(FText InName);
+
+	UFUNCTION()
 	void SetNameColor(FColor InColor);
 
 protected:
 	UNameComponent();
 
 	virtual void BeginPlay() override;
-	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
-
-	UFUNCTION()
-	void ReloadNameColor();
 
 	UPROPERTY()
 	UNameWidget* NameWidget;
-
-	UPROPERTY()
-	UFactionComponent* FactionComponent;
 };

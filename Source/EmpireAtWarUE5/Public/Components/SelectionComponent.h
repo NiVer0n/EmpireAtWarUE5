@@ -8,7 +8,6 @@
 
 class UMaterialInterface;
 class USoundCue;
-class UFactionComponent;
 
 UCLASS(Blueprintable, BlueprintType, ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
 class EMPIREATWARUE5_API USelectionComponent : public UActorComponent
@@ -20,41 +19,37 @@ public:
 	FORCEINLINE bool GetCanBeSelected() const { return bCanBeSelected; }
 	
 	void SetOwnerSelected(bool InSelected);
-	void SetSelectionCircleColor(const FColor SelectionColor);
+
+	UFUNCTION()
+	void SetSelectionColor(const FColor SelectionColor);
 
 protected:
 	virtual void BeginPlay() override;
-	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 
 	USelectionComponent();
 
-	UFUNCTION()
-	void ReloadSelectionColor();
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Selection")
-	bool bCanBeSelected;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Selection")
-	bool bIsSelected;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Selection")
-	bool bHovered;
-
-	UPROPERTY(EditAnywhere, Category = "Selection Settings")
-	UMaterialInterface* SelectionCircleMaterial;
-
-	UPROPERTY()
-	UMaterialInstanceDynamic* SelectionCircleMaterialInstance;
-
-	UPROPERTY(EditAnywhere, Category = "Selection Settings")
-	UStaticMesh* PlaneMesh;
-
-	UPROPERTY()
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	UStaticMeshComponent* PlaneComponent;
 
-	UPROPERTY()
-	UFactionComponent* FactionComponent;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Selection Settings")
+	UStaticMesh* PlaneMesh;
 
 	UPROPERTY(EditAnywhere, Category = "Selection Settings")
+	UMaterialInterface* SelectionMaterial;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Selection Settings")
 	USoundCue* SelectedSound;
+
+private:
+	UPROPERTY()
+	bool bCanBeSelected;
+
+	UPROPERTY()
+	bool bIsSelected;
+
+	UPROPERTY()
+	bool bHovered;
+
+	UPROPERTY()
+	UMaterialInstanceDynamic* SelectionMaterialInstance;
 };

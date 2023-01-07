@@ -4,7 +4,7 @@
 
 FColor UDA_Factions::GetTeamColor(FGenericTeamId TeamId)
 {
-	return GetFactionDataForTeamId(TeamId).Color;
+	return GetFactionDataForTeamID(TeamId).Color;
 }
 
 bool UDA_Factions::IsNeutral(FGenericTeamId TeamId)
@@ -16,12 +16,12 @@ bool UDA_Factions::IsNeutral(FGenericTeamId TeamId)
 
 bool UDA_Factions::IsAlly(FGenericTeamId A, FGenericTeamId B)
 {
-	return A == B || GetFactionDataForTeamId(A).Allies.HasTagExact(GetGameplayTagFromTeamID(B));
+	return A == B || GetFactionDataForTeamID(A).Allies.HasTagExact(GetGameplayTagFromTeamID(B));
 }
 
 bool UDA_Factions::IsPrimaryEnemies(FGenericTeamId A, FGenericTeamId B)
 {
-	return A != B && GetFactionDataForTeamId(A).PrimaryEnemy.MatchesTagExact(GetGameplayTagFromTeamID(B));
+	return A != B && GetFactionDataForTeamID(A).PrimaryEnemy.MatchesTagExact(GetGameplayTagFromTeamID(B));
 }
 
 FGenericTeamId UDA_Factions::GetTeamIdFromGameplayTag(FGameplayTag InGameplayTag)
@@ -40,7 +40,7 @@ FGameplayTag UDA_Factions::GetGameplayTagFromTeamID(FGenericTeamId TeamId)
 	return FactionsKeys[uint8(TeamId)];
 }
 
-FFactionsData UDA_Factions::GetFactionDataForTeamId(FGenericTeamId TeamId)
+FFactionsData UDA_Factions::GetFactionDataForTeamID(FGenericTeamId TeamId)
 {
 	TArray<FFactionsData> FactionsValues;
 	FactionsData.GenerateValueArray(FactionsValues);

@@ -6,8 +6,16 @@
 #include "Components/FactionComponent.h"
 #include "Components/NameComponent.h"
 #include "Components/MinimapComponent.h"
+#include "Data/DA_StarSystem.h"
 
 AStarSystem::AStarSystem()
+	: SphereComponent(nullptr)
+	, MeshComponent(nullptr)
+	, SelectionComponent(nullptr)
+	, NameComponent(nullptr)
+	, FactionComponent(nullptr)
+	, MinimapComponent(nullptr)
+	, StarSystemData()
 {
 	SphereComponent = CreateDefaultSubobject<USphereComponent>(TEXT("SphereComponent"));
 	SetRootComponent(SphereComponent);
@@ -28,7 +36,17 @@ void AStarSystem::BeginPlay()
 	MeshComponent->SetStaticMesh(StarSystemData->Mesh.Get());
 	NameComponent->SetName(StarSystemData->Name);
 
-	FactionComponent->SetNewFaction(StarSystemData->FactionControl);
+	FactionComponent->OnFactionControlChanged.AddUniqueDynamic(SelectionComponent, &USelectionComponent::SetSelectionColor);
+	FactionComponent->OnFactionControlChanged.AddUniqueDynamic(MinimapComponent, &UMinimapComponent::ReloadMinimapIcon);
+	FactionComponent->OnFactionControlChanged.AddUniqueDynamic(NameComponent, &UNameComponent::SetNameColor);
+}
+
+void AStarSystem::EndPlay(const EEndPlayReason::Type EndPlayReason)
+{
+	Super::EndPlay(EndPlayReason);
+	FactionComponent->OnFactionControlChanged.RemoveDynamic(SelectionComponent, &USelectionComponent::SetSelectionColor);
+	FactionComponent->OnFactionControlChanged.RemoveDynamic(MinimapComponent, &UMinimapComponent::ReloadMinimapIcon);
+	FactionComponent->OnFactionControlChanged.RemoveDynamic(NameComponent, &UNameComponent::SetNameColor);
 }
 
 void AStarSystem::SelectObject_Implementation()
@@ -46,4 +64,9 @@ void AStarSystem::ZoomToObject_Implementation(bool IsZoomIn)
 	SelectionComponent->SetOwnerSelected(!IsZoomIn);
 	SelectionComponent->SetCanBeSelected(!IsZoomIn);
 	NameComponent->SetVisibility(!IsZoomIn);
+}
+
+void AStarSystem::SetNewFaction_Implementation(FGameplayTag InNewFactionTag)
+{
+	FactionComponent->SetNewFaction(InNewFactionTag);
 }

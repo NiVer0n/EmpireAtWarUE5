@@ -1,7 +1,6 @@
 // NiVeron Games 2022. All rights reserved.
 
 #include "Components/MinimapComponent.h"
-#include "Components/FactionComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "Player/EAWHUDBase.h"
 #include "UI/MinimapWidget.h"
@@ -11,9 +10,9 @@
 UMinimapComponent::UMinimapComponent()
 	: MinimapWidget(nullptr)
 	, PinnedMinimapObjectWidget(nullptr)
-	, FactionComponent(nullptr)
 	, MinimapIconTexture(nullptr)
 	, MinimapIconMaterial(nullptr)
+	, MinimapIconMaterialInstance(nullptr)
 {
 }
 
@@ -22,12 +21,6 @@ void UMinimapComponent::BeginPlay()
 	Super::BeginPlay();
 
 	CreateMinimapWidget();
-	
-	FactionComponent = GetOwner()->FindComponentByClass<UFactionComponent>();
-	if (IsValid(FactionComponent))
-	{
-		FactionComponent->OnFactionControlChanged.AddDynamic(this, &UMinimapComponent::ReloadMinimapIcon);
-	}
 }
 
 void UMinimapComponent::CreateMinimapWidget()
@@ -55,18 +48,15 @@ void UMinimapComponent::CreateMinimapWidget()
 		return;
 	}
 
+	MinimapIconMaterialInstance = UMaterialInstanceDynamic::Create(MinimapIconMaterial, this);
+	MinimapIconMaterialInstance->SetTextureParameterValue(TEXT("Icon"), MinimapIconTexture);
 	PinnedMinimapObjectWidget = MinimapWidget->AddObjectToMinimap(GetOwner()->GetActorLocation());
-	PinnedMinimapObjectWidget->UpdateIcon(CreateIconFromData());
+	PinnedMinimapObjectWidget->UpdateIcon(MinimapIconMaterialInstance);
 }
 
 void UMinimapComponent::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
 	Super::EndPlay(EndPlayReason);
-
-	if (IsValid(FactionComponent))
-	{
-		FactionComponent->OnFactionControlChanged.RemoveDynamic(this, &UMinimapComponent::ReloadMinimapIcon);
-	}
 
 	if (IsValid(MinimapWidget))
 	{
@@ -74,21 +64,7 @@ void UMinimapComponent::EndPlay(const EEndPlayReason::Type EndPlayReason)
 	}
 }
 
-UMaterialInstanceDynamic* UMinimapComponent::CreateIconFromData()
+void UMinimapComponent::ReloadMinimapIcon(FColor IconColor)
 {
-	UMaterialInstanceDynamic* MinimapIconMaterialInstance = UMaterialInstanceDynamic::Create(MinimapIconMaterial, this);
-	MinimapIconMaterialInstance->SetTextureParameterValue(TEXT("Icon"), MinimapIconTexture);
-	if (IsValid(FactionComponent))
-	{
-		MinimapIconMaterialInstance->SetVectorParameterValue(TEXT("Color"), FactionComponent->GetFactionColorForPlayer(0));
-	}
-	return MinimapIconMaterialInstance;
-}
-
-void UMinimapComponent::ReloadMinimapIcon()
-{
-	if (IsValid(PinnedMinimapObjectWidget))
-	{
-		PinnedMinimapObjectWidget->UpdateIcon(CreateIconFromData());
-	}
+	MinimapIconMaterialInstance->SetVectorParameterValue(TEXT("Color"), IconColor);
 }
