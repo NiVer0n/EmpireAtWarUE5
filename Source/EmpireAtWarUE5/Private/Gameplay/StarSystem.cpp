@@ -7,6 +7,8 @@
 #include "Components/NameComponent.h"
 #include "Components/MinimapComponent.h"
 #include "Data/DA_StarSystem.h"
+#include "Player/EAWPlayerStateBase.h"
+#include "Gameplay/EAWGameplayStatics.h"
 
 AStarSystem::AStarSystem()
 	: SphereComponent(nullptr)
@@ -33,20 +35,33 @@ void AStarSystem::BeginPlay()
 {
 	Super::BeginPlay();
 
-	MeshComponent->SetStaticMesh(StarSystemData->Mesh.Get());
-	NameComponent->SetName(StarSystemData->Name);
-
-	FactionComponent->OnFactionControlChanged.AddUniqueDynamic(SelectionComponent, &USelectionComponent::SetSelectionColor);
-	FactionComponent->OnFactionControlChanged.AddUniqueDynamic(MinimapComponent, &UMinimapComponent::ReloadMinimapIcon);
-	FactionComponent->OnFactionControlChanged.AddUniqueDynamic(NameComponent, &UNameComponent::SetNameColor);
+	FactionComponent->OnFactionChanged.AddUniqueDynamic(SelectionComponent, &USelectionComponent::SetSelectionColor);
+	FactionComponent->OnFactionChanged.AddUniqueDynamic(MinimapComponent, &UMinimapComponent::ReloadMinimapIcon);
+	FactionComponent->OnFactionChanged.AddUniqueDynamic(NameComponent, &UNameComponent::SetNameColor);
 }
 
 void AStarSystem::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
+	FactionComponent->OnFactionChanged.RemoveDynamic(SelectionComponent, &USelectionComponent::SetSelectionColor);
+	FactionComponent->OnFactionChanged.RemoveDynamic(MinimapComponent, &UMinimapComponent::ReloadMinimapIcon);
+	FactionComponent->OnFactionChanged.RemoveDynamic(NameComponent, &UNameComponent::SetNameColor);
+	
 	Super::EndPlay(EndPlayReason);
-	FactionComponent->OnFactionControlChanged.RemoveDynamic(SelectionComponent, &USelectionComponent::SetSelectionColor);
-	FactionComponent->OnFactionControlChanged.RemoveDynamic(MinimapComponent, &UMinimapComponent::ReloadMinimapIcon);
-	FactionComponent->OnFactionControlChanged.RemoveDynamic(NameComponent, &UNameComponent::SetNameColor);
+}
+
+void AStarSystem::SetStarSystemData(UDA_StarSystem* InStarSystemData)
+{
+	StarSystemData = InStarSystemData;
+
+	if (MeshComponent)
+	{
+		MeshComponent->SetStaticMesh(StarSystemData->Mesh.Get());
+	}
+
+	if (NameComponent)
+	{
+		NameComponent->SetName(StarSystemData->Name);
+	}
 }
 
 void AStarSystem::SelectObject_Implementation()
@@ -68,5 +83,31 @@ void AStarSystem::ZoomToObject_Implementation(bool IsZoomIn)
 
 void AStarSystem::SetNewFaction_Implementation(FGameplayTag InNewFactionTag)
 {
+	if (!GetWorld())
+	{
+		return;
+	}
+
+	AEAWPlayerStateBase* OwningPlayerState = UEAWGameplayStatics::GetPlayerStateWithFactionTag(GetWorld(), FactionComponent->GetFactionTag());
+	if (IsValid(OwningPlayerState))
+	{
+		OwningPlayerState->HandleControlledStarSystem(this, false);
+	}
+
 	FactionComponent->SetNewFaction(InNewFactionTag);
+	OwningPlayerState = UEAWGameplayStatics::GetPlayerStateWithFactionTag(GetWorld(), InNewFactionTag);
+	if (IsValid(OwningPlayerState))
+	{
+		OwningPlayerState->HandleControlledStarSystem(this, true);
+	}
+}
+
+FGameplayTag AStarSystem::GetFactionTag_Implementation() const
+{
+	return FactionComponent->GetFactionTag();
+}
+
+FColor AStarSystem::GetOwnerFactionColor_Implementation(int32 PlayerIndex) const
+{
+	return FactionComponent->GetOwnerFactionColorForPlayer(PlayerIndex);
 }

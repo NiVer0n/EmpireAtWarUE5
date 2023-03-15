@@ -5,48 +5,39 @@
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
 #include "GameplayTagContainer.h"
-#include "GenericTeamAgentInterface.h"
 #include "FactionComponent.generated.h"
 
 class UDA_Factions;
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnFactionControlChanged, FColor, NewFactionControlColor);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnFactionChangedDelegate, FColor, NewFactionControlColor);
 
 UCLASS(ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
-class EMPIREATWARUE5_API UFactionComponent : public UActorComponent, public IGenericTeamAgentInterface
+class EMPIREATWARUE5_API UFactionComponent : public UActorComponent
 {
 	GENERATED_BODY()
 
 public:
 	UFUNCTION(BlueprintCallable, Category = "Team Affiliation")
-	FColor GetFactionColorForPlayer(int32 PlayerIndex);
-
-	UFUNCTION(BlueprintCallable, Category = "Team Affiliation")
-	virtual FGenericTeamId GetGenericTeamId() const override { return TeamID; }
-
-	UFUNCTION(BlueprintCallable, Category = "Team Affiliation")
-	ETeamAttitude::Type GetTeamAttitudeTowardsActor(const AActor* OtherActor);
-
-	UFUNCTION(BlueprintCallable, Category = "Team Affiliation")
-	FORCEINLINE UDA_Factions* GetFactionsDataAsset() const { return FactionsDataAsset; }
+	FColor GetOwnerFactionColorForPlayer(int32 PlayerIndex);
 
 	UFUNCTION(BlueprintCallable, Category = "Team Affiliation")
 	void SetNewFaction(FGameplayTag NewFactionTag);
 
+	UFUNCTION(BlueprintCallable, Category = "Team Affiliation")
+	FORCEINLINE FGameplayTag GetFactionTag() const { return FactionTag; }
+	
 	UPROPERTY(BlueprintAssignable, Category = "Team Affiliation")
-	FOnFactionControlChanged OnFactionControlChanged;
+	FOnFactionChangedDelegate OnFactionChanged;
 
 protected:
 	UFactionComponent();
 
 	virtual void BeginPlay() override;
 
-	UPROPERTY(Transient)
-	UDA_Factions* FactionsDataAsset;
-
-	UPROPERTY(VisibleAnywhere, Category = "Team Affiliation")
-	FGenericTeamId TeamID;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Team Affiliation")
+	FGameplayTag FactionTag;
 
 private:
-	FGenericTeamId GetActorTeamId(const AActor* InActor) const;
+	UPROPERTY()
+	UDA_Factions* FactionsDataAsset;
 };

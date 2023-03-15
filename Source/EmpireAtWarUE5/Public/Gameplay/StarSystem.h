@@ -25,12 +25,15 @@ class EMPIREATWARUE5_API AStarSystem : public AActor, public ISelectable, public
 	GENERATED_BODY()
 
 public:
-	FORCEINLINE void SetStarSystemData(UDA_StarSystem* InStarSystemData) { StarSystemData = InStarSystemData; }
+	FORCEINLINE UDA_StarSystem* GetStarSystemData() const { return StarSystemData; }
+	void SetStarSystemData(UDA_StarSystem* InStarSystemData);
 	
 	virtual void SelectObject_Implementation() override;
 	virtual void DeselectObject_Implementation() override;
 	virtual void ZoomToObject_Implementation(bool IsZoomIn) override;
 	virtual void SetNewFaction_Implementation(FGameplayTag InNewFactionTag) override;
+	virtual FGameplayTag GetFactionTag_Implementation() const override;
+	virtual FColor GetOwnerFactionColor_Implementation(int32 PlayerIndex) const override;
 
 protected:
 	AStarSystem();

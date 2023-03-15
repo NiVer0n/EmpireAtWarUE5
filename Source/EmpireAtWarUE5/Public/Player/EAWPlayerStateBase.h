@@ -10,6 +10,9 @@
 #include "EAWPlayerStateBase.generated.h"
 
 class UFactionComponent;
+class AStarSystem;
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnControlledSystemsChangedDelegate);
 
 USTRUCT()
 struct FStartupData
@@ -20,8 +23,7 @@ struct FStartupData
 
 	FStartupData(FGameplayTag InFaction, TMap<EResourceTypes, int32> InResources)
 		: Faction(InFaction)
-		, Resources(InResources)
-	{};
+		, Resources(InResources){};
 
 	FGameplayTag Faction;
 
@@ -37,18 +39,35 @@ class EMPIREATWARUE5_API AEAWPlayerStateBase : public APlayerState, public IFact
 	GENERATED_BODY()
 
 public:
-	FORCEINLINE UFactionComponent* GetFactionComponent() const { return FactionComponent; }
+	FORCEINLINE const TArray<AStarSystem*>& GetControlledStarSystems() { return ControlledStarSystems; }
+
+	void HandleControlledStarSystem(AStarSystem* InStarSystem, bool InControlGained);
 
 	/* Sets player data on first game start or from save. */
 	void ApplyStartupData(FStartupData StartupData);
 
 	virtual void SetNewFaction_Implementation(FGameplayTag InNewFactionTag) override;
+	virtual FGameplayTag GetFactionTag_Implementation() const override;
+
+	UPROPERTY(BlueprintAssignable, Category = "Gameplay")
+	FOnControlledSystemsChangedDelegate OnControlledSystemsChanged;
 
 protected:
 	AEAWPlayerStateBase();
 
 	virtual void BeginPlay() override;
+	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	UFactionComponent* FactionComponent;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Gameplay")
+	TArray<AStarSystem*> ControlledStarSystems;
+
+private:
+	UFUNCTION()
+	void CollectTaxes(int32 CurrentDay);
+
+	ULocalPlayer* GetLocalPlayer() const;
+	void HandleBindings(bool InBinded);
 };

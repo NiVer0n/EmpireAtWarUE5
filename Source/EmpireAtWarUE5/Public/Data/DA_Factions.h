@@ -38,10 +38,10 @@ public:
 	FORCEINLINE FColor GetAllyColor() const { return AllyColor; };
 	FORCEINLINE FColor GetEnemyColor() const { return EnemyColor; };
 	FORCEINLINE FGameplayTag GetNeutralTeamTag() const { return NeutralTag; }
-	FColor GetTeamColor(FGenericTeamId TeamId);
-	bool IsNeutral(FGenericTeamId TeamId);
-	bool IsAlly(FGenericTeamId A, FGenericTeamId B);
-	bool IsPrimaryEnemies(FGenericTeamId A, FGenericTeamId B);
+	FColor GetTeamColor(const FGameplayTag TeamTag);
+	bool IsNeutral(const FGameplayTag TeamTag);
+	bool IsAlly(const FGameplayTag TeamA, const FGameplayTag TeamB);
+	bool IsPrimaryEnemies(const FGameplayTag TeamA, const FGameplayTag TeamB);
 
 protected:
 	UPROPERTY(EditAnywhere, Category = "FactionsData", meta = (Categories = "Faction"))
@@ -58,11 +58,4 @@ protected:
 	/* Tag to detect neutral Team. */
 	UPROPERTY(EditAnywhere, Category = "FactionsData", meta = (Categories = "Faction"))
 	FGameplayTag NeutralTag;
-
-private:
-	FGenericTeamId GetTeamIdFromGameplayTag(FGameplayTag InGameplayTag);
-	FGameplayTag GetGameplayTagFromTeamID(FGenericTeamId TeamId);
-	FFactionsData GetFactionDataForTeamID(FGenericTeamId TeamId);
-
-	friend class UFactionComponent;
 };

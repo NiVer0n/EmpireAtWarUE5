@@ -44,9 +44,8 @@ void AEAWGameModeBase::CreateUniverse()
 		UDA_StarSystem* StarSystemData = *UniverseData.Find(CampaignData->StarSystemTag);
 		check(StarSystemData);
 
-		AStarSystem* StarSystem = GetWorld()->SpawnActorDeferred<AStarSystem>(StarSystemClass, FTransform(StarSystemData->Position));
+		AStarSystem* StarSystem = GetWorld()->SpawnActor<AStarSystem>(StarSystemClass, FTransform(StarSystemData->Position));
 		StarSystem->SetStarSystemData(StarSystemData);
-		StarSystem->FinishSpawning(FTransform(StarSystemData->Position));
 		if (StarSystem->Implements<UFactions>())
 		{
 			IFactions::Execute_SetNewFaction(StarSystem, CampaignData->DefaultFactionControl);

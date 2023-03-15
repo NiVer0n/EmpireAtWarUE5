@@ -23,5 +23,10 @@ class EMPIREATWARUE5_API IFactions
 public:
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Faction")
 	void SetNewFaction(FGameplayTag InNewFaction);
-	virtual void SetNewFaction_Implementation(FGameplayTag InNewFactionTag) {};
+
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Faction")
+	FGameplayTag GetFactionTag() const;
+
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Faction")
+	FColor GetOwnerFactionColor(int32 PlayerIndex) const;
 };

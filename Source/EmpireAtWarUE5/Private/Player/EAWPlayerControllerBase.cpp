@@ -173,6 +173,7 @@ AActor* AEAWPlayerControllerBase::GetActorUnderCursor()
 bool AEAWPlayerControllerBase::TrySelectActor()
 {
 	AActor* SelectedActor = GetActorUnderCursor();
+	OnActorSelected.Broadcast(SelectedActor);
 	if (IsValid(SelectedActor) && SelectedActor->Implements<USelectable>())
 	{
 		DeselectAllActors();

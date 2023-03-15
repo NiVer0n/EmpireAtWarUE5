@@ -6,6 +6,9 @@
 #include "Components/Button.h"
 #include "Subsystems/GalaxyTimeSubsystem.h"
 #include "Player/EAWPlayerControllerBase.h"
+#include "Player/EAWPlayerStateBase.h"
+#include "Gameplay/StarSystem.h"
+#include "Data/DA_StarSystem.h"
 
 void UDataPanelWidget::NativeConstruct()
 {
@@ -16,9 +19,9 @@ void UDataPanelWidget::NativeConstruct()
 
 void UDataPanelWidget::NativeDestruct()
 {
-	Super::NativeDestruct();
-
 	HandleBindings(false);
+	
+	Super::NativeDestruct();
 }
 
 void UDataPanelWidget::HandleBindings(bool InBinded)
@@ -31,11 +34,26 @@ void UDataPanelWidget::HandleBindings(bool InBinded)
 
 	UConsumableResourcesSubsystem* ResourceSubsystem = LocalPlayer->GetSubsystem<UConsumableResourcesSubsystem>();
 	UGalaxyTimeSubsystem* GalaxyTimeSubsystem = LocalPlayer->GetWorld()->GetSubsystem<UGalaxyTimeSubsystem>();
+
+	AEAWPlayerControllerBase* EAWPlayerController = Cast<AEAWPlayerControllerBase>(GetOwningPlayer());
+	if (!IsValid(EAWPlayerController))
+	{
+		return;
+	}
+
+	AEAWPlayerStateBase* EAWPlayerState = EAWPlayerController->GetPlayerState<AEAWPlayerStateBase>();
+	if (!IsValid(EAWPlayerState))
+	{
+		return;
+	}
+
 	if (InBinded)
 	{
 		ResourceSubsystem->OnResourcesChanged.AddUniqueDynamic(this, &ThisClass::RefreshResourceData);
 		GalaxyTimeSubsystem->OnGalaxyTimeChanged.AddUniqueDynamic(this, &ThisClass::UpdateCurrentDayProgressBar);
 		GalaxyTimeSubsystem->OnGalaxyDayChanged.AddUniqueDynamic(this, &ThisClass::UpdateCurrentDayText);
+		EAWPlayerController->OnActorSelected.AddUniqueDynamic(this, &ThisClass::UpdateSelectedActorInfo);
+		EAWPlayerState->OnControlledSystemsChanged.AddUniqueDynamic(this, &ThisClass::UpdateTaxCountText);
 		PauseGameButton->OnClicked.AddUniqueDynamic(this, &ThisClass::OnPauseGameButtonPressed);
 		SpeedUpTimeButton->OnClicked.AddUniqueDynamic(this, &ThisClass::OnSpeedUpTimeButtonPressed);
 	}
@@ -44,6 +62,8 @@ void UDataPanelWidget::HandleBindings(bool InBinded)
 		ResourceSubsystem->OnResourcesChanged.RemoveDynamic(this, &ThisClass::RefreshResourceData);
 		GalaxyTimeSubsystem->OnGalaxyTimeChanged.RemoveDynamic(this, &ThisClass::UpdateCurrentDayProgressBar);
 		GalaxyTimeSubsystem->OnGalaxyDayChanged.RemoveDynamic(this, &ThisClass::UpdateCurrentDayText);
+		EAWPlayerController->OnActorSelected.RemoveDynamic(this, &ThisClass::UpdateSelectedActorInfo);
+		EAWPlayerState->OnControlledSystemsChanged.RemoveDynamic(this, &ThisClass::UpdateTaxCountText);
 		PauseGameButton->OnClicked.RemoveDynamic(this, &ThisClass::OnPauseGameButtonPressed);
 		SpeedUpTimeButton->OnClicked.RemoveDynamic(this, &ThisClass::OnSpeedUpTimeButtonPressed);
 	}
@@ -56,10 +76,10 @@ void UDataPanelWidget::OnPauseGameButtonPressed()
 		return;
 	}
 
-	AEAWPlayerControllerBase* PC = Cast<AEAWPlayerControllerBase>(GetOwningPlayer());
-	if (IsValid(PC))
+	AEAWPlayerControllerBase* EAWPlayerController = Cast<AEAWPlayerControllerBase>(GetOwningPlayer());
+	if (IsValid(EAWPlayerController))
 	{
-		PC->ToggleGamePause(true);
+		EAWPlayerController->ToggleGamePause(true);
 	}
 }
 
@@ -70,10 +90,10 @@ void UDataPanelWidget::OnSpeedUpTimeButtonPressed()
 		return;
 	}
 
-	AEAWPlayerControllerBase* PC = Cast<AEAWPlayerControllerBase>(GetOwningPlayer());
-	if (IsValid(PC))
+	AEAWPlayerControllerBase* EAWPlayerController = Cast<AEAWPlayerControllerBase>(GetOwningPlayer());
+	if (IsValid(EAWPlayerController))
 	{
-		PC->ToggleGameSpeed();
+		EAWPlayerController->ToggleGameSpeed();
 	}
 }
 
@@ -104,4 +124,52 @@ void UDataPanelWidget::UpdateCurrentDayProgressBar(float InCurrentTime, float In
 void UDataPanelWidget::UpdateCurrentDayText(int32 InDay)
 {
 	CurrentDayText->SetText(FText::AsNumber(InDay));
+}
+
+void UDataPanelWidget::UpdateSelectedActorInfo(const AActor* SelectedActor)
+{
+	const bool ActorSelected = IsValid(SelectedActor);
+	SelectedSystemTaxCountText->SetVisibility(ActorSelected ? ESlateVisibility::Visible : ESlateVisibility::Hidden);
+	SelectedSystemNameText->SetVisibility(ActorSelected ? ESlateVisibility::Visible : ESlateVisibility::Hidden);
+	if (!ActorSelected)
+	{
+		return;
+	}
+
+	const AStarSystem* StarSystem = Cast<AStarSystem>(SelectedActor);
+	if (!IsValid(StarSystem))
+	{
+		return;
+	}
+
+	if (IsValid(StarSystem->GetStarSystemData()))
+	{
+		SelectedSystemTaxCountText->SetText(FText::AsNumber(StarSystem->GetStarSystemData()->TaxAmount));
+		SelectedSystemNameText->SetText(StarSystem->GetStarSystemData()->Name);
+		if (StarSystem->Implements<UFactions>())
+		{
+			SelectedSystemTaxCountText->SetColorAndOpacity(IFactions::Execute_GetOwnerFactionColor(StarSystem, 0));
+			SelectedSystemNameText->SetColorAndOpacity(IFactions::Execute_GetOwnerFactionColor(StarSystem, 0));
+		}
+	}
+}
+
+void UDataPanelWidget::UpdateTaxCountText()
+{
+	AEAWPlayerStateBase* EAWPlayerState = GetOwningPlayer()->GetPlayerState<AEAWPlayerStateBase>();
+	if (!IsValid(EAWPlayerState))
+	{
+		return;
+	}
+
+	int32 TaxAmount = 0;
+	for (const AStarSystem* StarSystem : EAWPlayerState->GetControlledStarSystems())
+	{
+		if (IsValid(StarSystem->GetStarSystemData()))
+		{
+			TaxAmount += StarSystem->GetStarSystemData()->TaxAmount;
+		}
+	}
+
+	TaxCountText->SetText(FText::AsNumber(TaxAmount));
 }

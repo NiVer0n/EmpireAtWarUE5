@@ -12,6 +12,8 @@ class UInputAction;
 class UDA_InputConfig;
 class UInputMappingContext;
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnActorSelectedDelegate, const AActor*, SelectedActor);
+
 /**
  * 
  */
@@ -32,6 +34,9 @@ public:
 	FVector GetImpactPointUnderCursor(ECollisionChannel TraceChannel, bool TraceComplex, bool& DidHit);
 	AActor* GetActorUnderCursor();
 	FORCEINLINE FVector2D GetSelectionStartPoint() const { return SelectionStartPoint; };
+
+	UPROPERTY(BlueprintAssignable, Category = "Selection")
+	FOnActorSelectedDelegate OnActorSelected;
 	
 protected:
 	AEAWPlayerControllerBase();

@@ -10,6 +10,7 @@
 class UTextBlock;
 class UProgressBar;
 class UButton;
+class AActor;
 
 /**
  * Class representing gameplay data: e.g. player resources, galaxy time control, etc.
@@ -25,6 +26,15 @@ protected:
 
 	UPROPERTY(BlueprintReadOnly, Category = "References", meta = (BindWidget))
 	UTextBlock* CreditsCountText;
+
+	UPROPERTY(BlueprintReadOnly, Category = "References", meta = (BindWidget))
+	UTextBlock* TaxCountText;
+	
+	UPROPERTY(BlueprintReadOnly, Category = "References", meta = (BindWidget))
+	UTextBlock* SelectedSystemTaxCountText;
+	
+	UPROPERTY(BlueprintReadOnly, Category = "References", meta = (BindWidget))
+	UTextBlock* SelectedSystemNameText;
 
 	UPROPERTY(BlueprintReadOnly, Category = "References", meta = (BindWidget))
 	UTextBlock* PopulationCountText;
@@ -52,6 +62,12 @@ private:
 
 	UFUNCTION()
 	void UpdateCurrentDayText(int32 InDay);
+	
+	UFUNCTION()
+	void UpdateSelectedActorInfo(const AActor* SelectedActor);
+	
+	UFUNCTION()
+	void UpdateTaxCountText();
 
 	UFUNCTION()
 	void OnPauseGameButtonPressed();
