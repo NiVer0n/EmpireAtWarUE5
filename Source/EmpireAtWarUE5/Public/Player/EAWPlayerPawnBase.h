@@ -69,10 +69,10 @@ struct EMPIREATWARUE5_API FOptionalValue
 	}
 
 	UPROPERTY()
-	bool bIsSet;
+	bool bIsSet = false;
 
 	UPROPERTY()
-	float Value;
+	float Value = 0.0f;
 };
 
 USTRUCT(BlueprintType)
@@ -81,7 +81,7 @@ struct EMPIREATWARUE5_API FTravelSettings
 	GENERATED_BODY()
 
 	UPROPERTY()
-	FVector StartingLocation;
+	FVector StartingLocation = FVector::ZeroVector;
 
 	UPROPERTY()
 	FOptionalValue StartingYaw;
@@ -93,7 +93,7 @@ struct EMPIREATWARUE5_API FTravelSettings
 	FOptionalValue StartingZoom;
 
 	UPROPERTY()
-	FVector TargetLocation;
+	FVector TargetLocation = FVector::ZeroVector;
 
 	UPROPERTY()
 	FTravelSpeedSettings SpeedSettings;
@@ -124,13 +124,13 @@ struct EMPIREATWARUE5_API FPositionSaveFormat
 
 public:
 	UPROPERTY()
-	FVector DesiredLocation;
+	FVector DesiredLocation = FVector::ZeroVector;
 
 	UPROPERTY()
-	FRotator DesiredRotation;
+	FRotator DesiredRotation = FRotator::ZeroRotator;
 
 	UPROPERTY()
-	float DesiredZoom;
+	float DesiredZoom = 0.0f;
 };
 
 /**

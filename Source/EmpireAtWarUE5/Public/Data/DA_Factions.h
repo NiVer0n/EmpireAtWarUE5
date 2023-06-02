@@ -23,7 +23,7 @@ struct FFactionsData
 	FGameplayTagContainer Enemies;
 
 	UPROPERTY(EditAnywhere, Category = "FactionsData")
-	FColor Color;
+	FColor Color = FColor();
 };
 
 /**
