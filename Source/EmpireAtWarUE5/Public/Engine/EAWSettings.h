@@ -25,7 +25,6 @@ class EMPIREATWARUE5_API UEAWSettings : public UDeveloperSettings
 public:
 	FORCEINLINE static const UEAWSettings* GetEAWSettings() { return GetDefault<UEAWSettings>(); }
 	FORCEINLINE UDataTable* GetCampaignDataTable() const { return CampaignDataTable.LoadSynchronous(); }
-	FORCEINLINE UDA_Universe* GetUniverseDataAsset() const { return UniverseData.LoadSynchronous(); }
 	FORCEINLINE TSubclassOf<AStarSystem> GetStarSystemClass() const { return StarSystemClass.LoadSynchronous(); }
 	FORCEINLINE int32 GetGalaxyDayDuration() const { return GalaxyDayDuration; }
 	FORCEINLINE float GetGameSpeedMultiplier() const { return GameSpeedMultiplier; }
@@ -39,18 +38,15 @@ protected:
 	UPROPERTY(Config, EditAnywhere, BlueprintReadOnly, Category = "References|Universe")
 	TSoftClassPtr<AStarSystem> StarSystemClass;
 
-	UPROPERTY(Config, EditAnywhere, BlueprintReadOnly, Category = "GameSettings|Universe")
-	TSoftObjectPtr<UDA_Universe> UniverseData;
-	
 	UPROPERTY(Config, EditAnywhere, BlueprintReadOnly, Category = "GameSettings|Universe", meta = (Units = Seconds))
-	int32 GalaxyDayDuration;
-	
+	int32 GalaxyDayDuration = 0;
+
 	UPROPERTY(Config, EditAnywhere, BlueprintReadOnly, Category = "GameSettings|Universe")
 	float GameSpeedMultiplier = 2.0f;
 
 	UPROPERTY(Config, EditAnywhere, BlueprintReadOnly, Category = "References|Factions")
 	TSoftObjectPtr<UDA_Factions> FactionsDataAsset;
-	
+
 	UPROPERTY(Config, EditAnywhere, BlueprintReadOnly, Category = "References|Input")
 	TSoftObjectPtr<UDA_InputConfig> InputConfigAsset;
 };

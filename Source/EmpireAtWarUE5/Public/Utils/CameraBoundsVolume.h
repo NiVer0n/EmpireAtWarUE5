@@ -6,7 +6,7 @@
 #include "GameFramework/Volume.h"
 #include "CameraBoundsVolume.generated.h"
 
-/* 
+/*
  * Volume that restricts camera movement.
  * Cameras are not allowed to move outside of this volume.
  * There should never be more than one camera bounds volume per level.

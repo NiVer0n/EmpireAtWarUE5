@@ -15,6 +15,7 @@ class USelectionComponent;
 class UNameComponent;
 class UFactionComponent;
 class UMinimapComponent;
+class UStarbaseComponent;
 
 /**
  * Base class of celestial body
@@ -26,8 +27,7 @@ class EMPIREATWARUE5_API AStarSystem : public AActor, public ISelectable, public
 
 public:
 	FORCEINLINE UDA_StarSystem* GetStarSystemData() const { return StarSystemData; }
-	void SetStarSystemData(UDA_StarSystem* InStarSystemData);
-	
+
 	virtual void SelectObject_Implementation() override;
 	virtual void DeselectObject_Implementation() override;
 	virtual void ZoomToObject_Implementation(bool IsZoomIn) override;
@@ -40,6 +40,9 @@ protected:
 
 	virtual void BeginPlay() override;
 	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
+
+	UFUNCTION(BlueprintCallable)
+	void InitializeStarSystem();
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	USphereComponent* SphereComponent;
@@ -58,7 +61,10 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	UMinimapComponent* MinimapComponent;
+	
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
+	UStarbaseComponent* StarbaseComponent;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "GameplayData")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "GameplayData")
 	UDA_StarSystem* StarSystemData;
 };

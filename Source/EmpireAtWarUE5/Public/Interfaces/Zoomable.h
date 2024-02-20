@@ -13,7 +13,7 @@ class UZoomable : public UInterface
 };
 
 /**
- * 
+ *
  */
 class EMPIREATWARUE5_API IZoomable
 {

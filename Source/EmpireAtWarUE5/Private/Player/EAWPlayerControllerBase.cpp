@@ -28,20 +28,21 @@ void AEAWPlayerControllerBase::SetupInputComponent()
 	bEnableMouseOverEvents = true;
 	SetInputMode(FInputModeGameAndUI().SetHideCursorDuringCapture(false));
 
+	const UDA_InputConfig* InputConfig = GEAWSettings.GetInputConfigAsset();
+	check(InputConfig);
 	UEnhancedInputLocalPlayerSubsystem* Subsystem = GetLocalPlayer()->GetSubsystem<UEnhancedInputLocalPlayerSubsystem>();
-	check(GEAWSettings.GetInputConfigAsset());
 	Subsystem->ClearAllMappings();
-	Subsystem->AddMappingContext(GEAWSettings.GetInputConfigAsset()->GetMappingContext(), 0);
+	Subsystem->AddMappingContext(InputConfig->GetMappingContext(), 0);
 
 	UEAWInputComponent* EAWInputComponent = Cast<UEAWInputComponent>(InputComponent);
 	check(EAWInputComponent);
-	EAWInputComponent->BindActionByTag(GEAWSettings.GetInputConfigAsset(), GEAWGameplayTags.INPUT_MOVE_TAG, ETriggerEvent::Triggered, this, &ThisClass::EnhancedMove);
-	EAWInputComponent->BindActionByTag(GEAWSettings.GetInputConfigAsset(), GEAWGameplayTags.INPUT_ROTATE_TAG, ETriggerEvent::Triggered, this, &ThisClass::EnhancedRotate);
-	EAWInputComponent->BindActionByTag(GEAWSettings.GetInputConfigAsset(), GEAWGameplayTags.INPUT_ZOOM_TAG, ETriggerEvent::Triggered, this, &ThisClass::EnhancedZoom);
-	EAWInputComponent->BindActionByTag(GEAWSettings.GetInputConfigAsset(), GEAWGameplayTags.INPUT_SLIDE_TAG, ETriggerEvent::Triggered, this, &ThisClass::Slide);
-	EAWInputComponent->BindActionByTag(GEAWSettings.GetInputConfigAsset(), GEAWGameplayTags.INPUT_SPIN_TAG, ETriggerEvent::Triggered, this, &ThisClass::Spin);
-	EAWInputComponent->BindActionByTag(GEAWSettings.GetInputConfigAsset(), GEAWGameplayTags.INPUT_RESTORE_POSITION_TAG, ETriggerEvent::Triggered, this, &ThisClass::RestorePosition);
-	EAWInputComponent->BindActionByTag(GEAWSettings.GetInputConfigAsset(), GEAWGameplayTags.INPUT_PRIMARY_ACTION_TAG, ETriggerEvent::Triggered, this, &ThisClass::EnhancedStartPrimaryAction);
+	EAWInputComponent->BindActionByTag(InputConfig, GEAWGameplayTags.INPUT_MOVE_TAG, ETriggerEvent::Triggered, this, &ThisClass::EnhancedMove);
+	EAWInputComponent->BindActionByTag(InputConfig, GEAWGameplayTags.INPUT_ROTATE_TAG, ETriggerEvent::Triggered, this, &ThisClass::EnhancedRotate);
+	EAWInputComponent->BindActionByTag(InputConfig, GEAWGameplayTags.INPUT_ZOOM_TAG, ETriggerEvent::Triggered, this, &ThisClass::EnhancedZoom);
+	EAWInputComponent->BindActionByTag(InputConfig, GEAWGameplayTags.INPUT_SLIDE_TAG, ETriggerEvent::Triggered, this, &ThisClass::Slide);
+	EAWInputComponent->BindActionByTag(InputConfig, GEAWGameplayTags.INPUT_SPIN_TAG, ETriggerEvent::Triggered, this, &ThisClass::Spin);
+	EAWInputComponent->BindActionByTag(InputConfig, GEAWGameplayTags.INPUT_RESTORE_POSITION_TAG, ETriggerEvent::Triggered, this, &ThisClass::RestorePosition);
+	EAWInputComponent->BindActionByTag(InputConfig, GEAWGameplayTags.INPUT_PRIMARY_ACTION_TAG, ETriggerEvent::Triggered, this, &ThisClass::EnhancedStartPrimaryAction);
 }
 
 void AEAWPlayerControllerBase::OnPossess(APawn* InPawn)

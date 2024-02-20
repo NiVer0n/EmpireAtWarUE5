@@ -27,7 +27,7 @@ struct FFactionsData
 };
 
 /**
- * 
+ *
  */
 UCLASS()
 class EMPIREATWARUE5_API UDA_Factions : public UDataAsset

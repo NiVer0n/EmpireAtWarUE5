@@ -6,9 +6,13 @@
 #include "Components/FactionComponent.h"
 #include "Components/NameComponent.h"
 #include "Components/MinimapComponent.h"
+#include "Components/StarbaseComponent.h"
 #include "Data/DA_StarSystem.h"
 #include "Player/EAWPlayerStateBase.h"
 #include "Gameplay/EAWGameplayStatics.h"
+#include "EmpireAtWarUE5/EmpireAtWarUE5.h"
+#include "Engine/StreamableManager.h"
+#include "Engine/AssetManager.h"
 
 AStarSystem::AStarSystem()
 	: SphereComponent(nullptr)
@@ -17,23 +21,29 @@ AStarSystem::AStarSystem()
 	, NameComponent(nullptr)
 	, FactionComponent(nullptr)
 	, MinimapComponent(nullptr)
+	, StarbaseComponent(nullptr)
 	, StarSystemData()
 {
-	SphereComponent = CreateDefaultSubobject<USphereComponent>(TEXT("SphereComponent"));
+	SphereComponent = CreateDefaultSubobject<USphereComponent>("SphereComponent");
 	SetRootComponent(SphereComponent);
-	MeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Mesh"));
+	MeshComponent = CreateDefaultSubobject<UStaticMeshComponent>("Mesh");
 	MeshComponent->SetupAttachment(RootComponent);
 
-	FactionComponent = CreateDefaultSubobject<UFactionComponent>(TEXT("FactionComponent"));
-	MinimapComponent = CreateDefaultSubobject<UMinimapComponent>(TEXT("MinimapComponent"));
-	SelectionComponent = CreateDefaultSubobject<USelectionComponent>(TEXT("SelectionComponent"));
-	NameComponent = CreateDefaultSubobject<UNameComponent>(TEXT("NameComponent"));
+	FactionComponent = CreateDefaultSubobject<UFactionComponent>("FactionComponent");
+	MinimapComponent = CreateDefaultSubobject<UMinimapComponent>("MinimapComponent");
+	SelectionComponent = CreateDefaultSubobject<USelectionComponent>("SelectionComponent");
+	NameComponent = CreateDefaultSubobject<UNameComponent>("NameComponent");
 	NameComponent->SetupAttachment(RootComponent);
+	
+	StarbaseComponent = CreateDefaultSubobject<UStarbaseComponent>("StarbaseComponent");
+	StarbaseComponent->SetupAttachment(RootComponent);
 }
 
 void AStarSystem::BeginPlay()
 {
 	Super::BeginPlay();
+
+	InitializeStarSystem();
 
 	FactionComponent->OnFactionChanged.AddUniqueDynamic(SelectionComponent, &USelectionComponent::SetSelectionColor);
 	FactionComponent->OnFactionChanged.AddUniqueDynamic(MinimapComponent, &UMinimapComponent::ReloadMinimapIcon);
@@ -45,22 +55,45 @@ void AStarSystem::EndPlay(const EEndPlayReason::Type EndPlayReason)
 	FactionComponent->OnFactionChanged.RemoveDynamic(SelectionComponent, &USelectionComponent::SetSelectionColor);
 	FactionComponent->OnFactionChanged.RemoveDynamic(MinimapComponent, &UMinimapComponent::ReloadMinimapIcon);
 	FactionComponent->OnFactionChanged.RemoveDynamic(NameComponent, &UNameComponent::SetNameColor);
-	
+
 	Super::EndPlay(EndPlayReason);
 }
 
-void AStarSystem::SetStarSystemData(UDA_StarSystem* InStarSystemData)
+void AStarSystem::InitializeStarSystem()
 {
-	StarSystemData = InStarSystemData;
-
+	if (!IsValid(StarSystemData))
+	{
+		UE_LOG(LogStarSystem, Error, TEXT("Missing StarSystemData in %s"), GetClass()->GetFName());
+		return;
+	}
+	
+	FStreamableManager& Streamable = UAssetManager::GetStreamableManager();
+	// Override default visual of starsystem
 	if (MeshComponent)
 	{
-		MeshComponent->SetStaticMesh(StarSystemData->Mesh.Get());
+		Streamable.RequestAsyncLoad(StarSystemData->OverrideMesh.ToSoftObjectPath(), [this] 
+		{
+			MeshComponent->SetStaticMesh(StarSystemData->OverrideMesh.Get());
+		});
+
+		Streamable.RequestAsyncLoad(StarSystemData->OverrideMaterial.ToSoftObjectPath(), [this] {
+			MeshComponent->SetMaterial(0, StarSystemData->OverrideMaterial.Get());
+		});
+
+		if (StarSystemData->OverrideScale > 0.0)
+		{
+			MeshComponent->SetRelativeScale3D(FVector(StarSystemData->OverrideScale));
+		}
 	}
 
 	if (NameComponent)
 	{
 		NameComponent->SetName(StarSystemData->Name);
+	}
+
+	if (StarbaseComponent)
+	{
+		StarbaseComponent->SetRelativeLocation(StarSystemData->StarBaseOffset);
 	}
 }
 

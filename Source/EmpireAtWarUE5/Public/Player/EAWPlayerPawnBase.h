@@ -97,13 +97,13 @@ struct EMPIREATWARUE5_API FTravelSettings
 
 	UPROPERTY()
 	FTravelSpeedSettings SpeedSettings;
-	
+
 	UPROPERTY()
 	FOptionalValue TargetYaw;
-	
+
 	UPROPERTY()
 	FOptionalValue TargetPitch;
-	
+
 	UPROPERTY()
 	FOptionalValue TargetZoom;
 
@@ -401,4 +401,6 @@ protected:
 
 	UPROPERTY(SaveGame, BlueprintReadWrite, EditDefaultsOnly, Category = "Camera Settings|Save")
 	FPositionSaveFormat LastSavedPosition;
+
+	float m_new;
 };

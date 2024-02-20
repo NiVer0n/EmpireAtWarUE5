@@ -15,7 +15,7 @@ class UInputMappingContext;
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnActorSelectedDelegate, const AActor*, SelectedActor);
 
 /**
- * 
+ *
  */
 UCLASS()
 class EMPIREATWARUE5_API AEAWPlayerControllerBase : public APlayerController
@@ -37,7 +37,7 @@ public:
 
 	UPROPERTY(BlueprintAssignable, Category = "Selection")
 	FOnActorSelectedDelegate OnActorSelected;
-	
+
 protected:
 	AEAWPlayerControllerBase();
 
@@ -58,6 +58,7 @@ protected:
 
 	UPROPERTY()
 	TArray<AActor*> SelectedActors;
+
 private:
 	void AddSelectedActorToList(AActor* SelectedActor);
 	void DeselectAllActors();

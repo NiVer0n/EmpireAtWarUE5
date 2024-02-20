@@ -14,10 +14,13 @@ class EMPIREATWARUE5_API UNameComponent : public UWidgetComponent
 	GENERATED_BODY()
 
 public:
+	UFUNCTION(BlueprintCallable)
 	void SetName(FText InName);
 
 	UFUNCTION()
 	void SetNameColor(FColor InColor);
+
+	virtual void UpdateWidget() override;
 
 protected:
 	UNameComponent();

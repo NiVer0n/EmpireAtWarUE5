@@ -16,35 +16,35 @@ UCLASS()
 class EMPIREATWARUE5_API UDA_StarSystem : public UDataAsset
 {
 	GENERATED_BODY()
-	
+
 public:
-	UPROPERTY(EditAnywhere, Category = "StarSystemData|Data")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "StarSystemData|Data")
 	FGameplayTag Tag;
 
-	UPROPERTY(EditAnywhere, Category = "StarSystemData|Data")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "StarSystemData|Data")
 	FText Name;
 
-	UPROPERTY(EditAnywhere, Category = "StarSystemData|Visual")
-	TSoftObjectPtr<UStaticMesh> Mesh;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "StarSystemData|Visual")
+	TSoftObjectPtr<UStaticMesh> OverrideMesh;
 
-	UPROPERTY(EditAnywhere, Category = "StarSystemData|Visual")
-	UMaterialInterface* Material;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "StarSystemData|Visual")
+	TSoftObjectPtr<UMaterialInterface> OverrideMaterial;
 
-	UPROPERTY(EditAnywhere, Category = "StarSystemData|Visual")
-	FVector Position;
-
-	UPROPERTY(EditAnywhere, Category = "StarSystemData|Visual")
-	float Scale;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "StarSystemData|Visual")
+	float OverrideScale;
 	
-	UPROPERTY(EditAnywhere, Category = "StarSystemData|Resources")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "StarSystemData|Visual")
+	FVector StarBaseOffset;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "StarSystemData|Resources")
 	int32 CaptureControlBonus;
 
-	UPROPERTY(EditAnywhere, Category = "StarSystemData|Resources")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "StarSystemData|Resources")
 	int32 TaxAmount;
-	
-	UPROPERTY(EditAnywhere, Category = "StarSystemData|Resources")
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "StarSystemData|Resources")
 	int32 AdditionalPopulationAmount;
-	
-	UPROPERTY(EditAnywhere, Category = "StarSystemData|Maps")
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "StarSystemData|Maps")
 	FName SpaceTacticalMapName;
 };

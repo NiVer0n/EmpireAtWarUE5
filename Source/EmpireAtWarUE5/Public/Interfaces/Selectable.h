@@ -13,7 +13,7 @@ class USelectable : public UInterface
 };
 
 /**
- * 
+ *
  */
 class EMPIREATWARUE5_API ISelectable
 {

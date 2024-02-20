@@ -7,7 +7,7 @@
 #include "EAWPlayerControllerGalaxy.generated.h"
 
 /**
- * 
+ *
  */
 UCLASS()
 class EMPIREATWARUE5_API AEAWPlayerControllerGalaxy : public AEAWPlayerControllerBase

@@ -17,7 +17,7 @@ class EMPIREATWARUE5_API UMinimapWidget : public UUserWidget
 
 public:
 	UMinimapObjectWidget* AddObjectToMinimap(const FVector InObjectLocation);
-	
+
 protected:
 	UMinimapWidget(const FObjectInitializer& ObjectInitializer);
 
@@ -40,7 +40,7 @@ protected:
 
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category = "MinimapSettings")
 	FVector2D LevelSize;
-	
+
 	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category = "MinimapSettings")
 	float MinimapZoomRatio;
 };

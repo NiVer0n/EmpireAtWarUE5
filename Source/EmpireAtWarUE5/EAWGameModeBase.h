@@ -7,7 +7,7 @@
 #include "EAWGameModeBase.generated.h"
 
 /**
- * 
+ *
  */
 UCLASS()
 class EMPIREATWARUE5_API AEAWGameModeBase : public AGameModeBase
@@ -16,12 +16,4 @@ class EMPIREATWARUE5_API AEAWGameModeBase : public AGameModeBase
 
 protected:
 	AEAWGameModeBase(const FObjectInitializer& ObjectInitializer);
-
-	virtual void StartPlay() override;
-
-private:
-	void CreateUniverse();
-
-	UPROPERTY(Transient)
-	TMap<FName, AActor*> UniverseMap;
 };

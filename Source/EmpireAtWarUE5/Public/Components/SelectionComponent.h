@@ -17,7 +17,7 @@ class EMPIREATWARUE5_API USelectionComponent : public UActorComponent
 public:
 	FORCEINLINE void SetCanBeSelected(bool bCanSelect) { bCanBeSelected = bCanSelect; }
 	FORCEINLINE bool GetCanBeSelected() const { return bCanBeSelected; }
-	
+
 	void SetOwnerSelected(bool InSelected);
 
 	UFUNCTION()
@@ -36,7 +36,7 @@ protected:
 
 	UPROPERTY(EditAnywhere, Category = "Selection Settings")
 	UMaterialInterface* SelectionMaterial;
-	
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Selection Settings")
 	USoundCue* SelectedSound;
 

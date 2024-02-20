@@ -20,7 +20,7 @@ void UDataPanelWidget::NativeConstruct()
 void UDataPanelWidget::NativeDestruct()
 {
 	HandleBindings(false);
-	
+
 	Super::NativeDestruct();
 }
 
@@ -142,15 +142,18 @@ void UDataPanelWidget::UpdateSelectedActorInfo(const AActor* SelectedActor)
 		return;
 	}
 
-	if (IsValid(StarSystem->GetStarSystemData()))
+	const UDA_StarSystem* Data = StarSystem->GetStarSystemData();
+	if (!Data)
 	{
-		SelectedSystemTaxCountText->SetText(FText::AsNumber(StarSystem->GetStarSystemData()->TaxAmount));
-		SelectedSystemNameText->SetText(StarSystem->GetStarSystemData()->Name);
-		if (StarSystem->Implements<UFactions>())
-		{
-			SelectedSystemTaxCountText->SetColorAndOpacity(IFactions::Execute_GetOwnerFactionColor(StarSystem, 0));
-			SelectedSystemNameText->SetColorAndOpacity(IFactions::Execute_GetOwnerFactionColor(StarSystem, 0));
-		}
+		return;
+	}
+
+	SelectedSystemTaxCountText->SetText(FText::AsNumber(Data->TaxAmount));
+	SelectedSystemNameText->SetText(Data->Name);
+	if (StarSystem->Implements<UFactions>())
+	{
+		SelectedSystemTaxCountText->SetColorAndOpacity(IFactions::Execute_GetOwnerFactionColor(StarSystem, 0));
+		SelectedSystemNameText->SetColorAndOpacity(IFactions::Execute_GetOwnerFactionColor(StarSystem, 0));
 	}
 }
 
@@ -165,9 +168,10 @@ void UDataPanelWidget::UpdateTaxCountText()
 	int32 TaxAmount = 0;
 	for (const AStarSystem* StarSystem : EAWPlayerState->GetControlledStarSystems())
 	{
-		if (IsValid(StarSystem->GetStarSystemData()))
+		const UDA_StarSystem* Data = StarSystem->GetStarSystemData();
+		if (Data)
 		{
-			TaxAmount += StarSystem->GetStarSystemData()->TaxAmount;
+			TaxAmount += Data->TaxAmount;
 		}
 	}
 

@@ -9,6 +9,6 @@ const UInputAction* UDA_InputConfig::FindInputActionForTag(const FGameplayTag& I
 		[&](const FTaggedInputAction& TaggedInputAction) {
 			return TaggedInputAction.InputAction && TaggedInputAction.InputTag == InputTag;
 		});
-		
+
 	return FoundInputAction ? FoundInputAction->InputAction : nullptr;
 }

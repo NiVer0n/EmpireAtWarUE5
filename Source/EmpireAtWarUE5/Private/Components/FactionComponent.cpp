@@ -27,7 +27,7 @@ FColor UFactionComponent::GetOwnerFactionColorForPlayer(int32 PlayerIndex)
 	}
 
 	const FGameplayTag PlayerFactionTag = UEAWGameplayStatics::GetPlayerFactionTag(GetWorld(), PlayerIndex);
-	if(FactionsDataAsset->IsPrimaryEnemies(FactionTag, PlayerFactionTag))
+	if (FactionsDataAsset->IsPrimaryEnemies(FactionTag, PlayerFactionTag))
 	{
 		return FactionsDataAsset->GetEnemyColor();
 	}

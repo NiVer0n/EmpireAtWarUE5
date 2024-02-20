@@ -25,7 +25,7 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Team Affiliation")
 	FORCEINLINE FGameplayTag GetFactionTag() const { return FactionTag; }
-	
+
 	UPROPERTY(BlueprintAssignable, Category = "Team Affiliation")
 	FOnFactionChangedDelegate OnFactionChanged;
 

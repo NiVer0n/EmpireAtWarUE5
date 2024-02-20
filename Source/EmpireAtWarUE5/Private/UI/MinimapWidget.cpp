@@ -34,7 +34,7 @@ void UMinimapWidget::NativeConstruct()
 	FVector Origin, BoxExtend;
 	CameraBoundsActor->GetActorBounds(false, Origin, BoxExtend);
 	LevelSize = FVector2D(BoxExtend * MinimapZoomRatio);
-	MinimapSize = MinimapImage->Brush.ImageSize;
+	MinimapSize = MinimapImage->GetBrush().ImageSize;
 }
 
 UMinimapObjectWidget* UMinimapWidget::AddObjectToMinimap(const FVector InObjectLocation)

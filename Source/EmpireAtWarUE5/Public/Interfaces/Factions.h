@@ -14,7 +14,7 @@ class UFactions : public UInterface
 };
 
 /**
- * 
+ *
  */
 class EMPIREATWARUE5_API IFactions
 {

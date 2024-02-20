@@ -7,7 +7,7 @@
 #include "EAWAssetManager.generated.h"
 
 /**
- * 
+ *
  */
 UCLASS()
 class EMPIREATWARUE5_API UEAWAssetManager : public UAssetManager

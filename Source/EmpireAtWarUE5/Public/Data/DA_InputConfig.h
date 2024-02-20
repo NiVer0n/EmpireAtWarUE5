@@ -28,7 +28,7 @@ public:
 };
 
 /**
- * 
+ *
  */
 UCLASS()
 class EMPIREATWARUE5_API UDA_InputConfig : public UDataAsset

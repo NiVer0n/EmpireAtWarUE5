@@ -28,7 +28,7 @@ void UGalaxyTimeSubsystem::Tick(float DeltaTime)
 void UGalaxyTimeSubsystem::UpdateGameTime(float DeltaTime)
 {
 	CurrentTime += DeltaTime;
-	
+
 	if (CurrentTime < NextUpdateTime)
 	{
 		return;

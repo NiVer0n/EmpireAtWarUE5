@@ -11,7 +11,7 @@ class AEAWPlayerStateBase;
 class AGameStateBase;
 
 /**
- * 
+ *
  */
 UCLASS()
 class UEAWGameplayStatics : public UBlueprintFunctionLibrary

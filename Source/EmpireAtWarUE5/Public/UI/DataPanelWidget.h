@@ -29,10 +29,10 @@ protected:
 
 	UPROPERTY(BlueprintReadOnly, Category = "References", meta = (BindWidget))
 	UTextBlock* TaxCountText;
-	
+
 	UPROPERTY(BlueprintReadOnly, Category = "References", meta = (BindWidget))
 	UTextBlock* SelectedSystemTaxCountText;
-	
+
 	UPROPERTY(BlueprintReadOnly, Category = "References", meta = (BindWidget))
 	UTextBlock* SelectedSystemNameText;
 
@@ -47,7 +47,7 @@ protected:
 
 	UPROPERTY(BlueprintReadOnly, Category = "References", meta = (BindWidget))
 	UButton* PauseGameButton;
-	 
+
 	UPROPERTY(BlueprintReadOnly, Category = "References", meta = (BindWidget))
 	UButton* SpeedUpTimeButton;
 
@@ -62,16 +62,16 @@ private:
 
 	UFUNCTION()
 	void UpdateCurrentDayText(int32 InDay);
-	
+
 	UFUNCTION()
 	void UpdateSelectedActorInfo(const AActor* SelectedActor);
-	
+
 	UFUNCTION()
 	void UpdateTaxCountText();
 
 	UFUNCTION()
 	void OnPauseGameButtonPressed();
-	
+
 	UFUNCTION()
 	void OnSpeedUpTimeButtonPressed();
 };

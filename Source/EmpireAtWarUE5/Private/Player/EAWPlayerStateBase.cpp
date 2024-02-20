@@ -81,11 +81,10 @@ void AEAWPlayerStateBase::CollectTaxes(int32 CurrentDay)
 	UConsumableResourcesSubsystem* ResourceSubsystem = GetLocalPlayer()->GetSubsystem<UConsumableResourcesSubsystem>();
 	for (AStarSystem* StarSystem : ControlledStarSystems)
 	{
-		if (IsValid(StarSystem->GetStarSystemData()))
+		if (UDA_StarSystem* Data = StarSystem->GetStarSystemData())
 		{
-			const int32 TaxAmount = StarSystem->GetStarSystemData()->TaxAmount;
-			ResourceSubsystem->AddConsumableResource(EResourceTypes::Credits, TaxAmount);
-		}
+			ResourceSubsystem->AddConsumableResource(EResourceTypes::Credits, Data->TaxAmount);
+		}	
 	}
 }
 

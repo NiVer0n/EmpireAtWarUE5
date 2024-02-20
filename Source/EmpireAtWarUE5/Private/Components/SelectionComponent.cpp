@@ -23,7 +23,7 @@ void USelectionComponent::BeginPlay()
 	{
 		return;
 	}
-	
+
 	ensureMsgf(IsValid(PlaneMesh), TEXT("%s: PlaneMesh isn't set."), ANSI_TO_TCHAR(__FUNCTION__));
 	PlaneComponent = NewObject<UStaticMeshComponent>(Owner, TEXT("SelectionCirclePlane"));
 	PlaneComponent->AttachToComponent(Owner->GetRootComponent(), FAttachmentTransformRules::KeepRelativeTransform);

@@ -4,6 +4,9 @@
 
 #include "CoreMinimal.h"
 
+EMPIREATWARUE5_API DECLARE_LOG_CATEGORY_EXTERN(LogStarSystem, Log, All);
+EMPIREATWARUE5_API DECLARE_LOG_CATEGORY_EXTERN(LogUniverseSubsystem, Log, All);
+
 class FEmpireAtWarUE5GameModule : public FDefaultGameModuleImpl
 {
 };

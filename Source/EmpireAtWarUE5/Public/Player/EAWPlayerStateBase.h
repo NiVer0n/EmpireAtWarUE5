@@ -31,7 +31,7 @@ struct FStartupData
 };
 
 /**
- * 
+ *
  */
 UCLASS()
 class EMPIREATWARUE5_API AEAWPlayerStateBase : public APlayerState, public IFactions

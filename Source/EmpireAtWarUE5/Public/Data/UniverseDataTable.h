@@ -9,9 +9,9 @@
 
 /**
  * Struct contains gameplay data of singleplayer campaigns
- * e.g. locations (star systems), factions starting forces 
+ * e.g. locations (star systems), factions starting forces
  * and other required data.
-*/
+ */
 USTRUCT(BlueprintType)
 struct FCampaignData : public FTableRowBase
 {

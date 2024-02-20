@@ -32,11 +32,11 @@ protected:
 	virtual void OnWorldBeginPlay(UWorld& InWorld) override;
 	virtual void Tick(float DeltaTime) override;
 	virtual TStatId GetStatId() const override { return TStatId(); }
-	
+
 	/* Time since the start of the game. */
 	UPROPERTY(SaveGame, VisibleAnywhere, BlueprintReadOnly, Category = "GameTime")
 	float CurrentTime;
-	
+
 	/* Current game day. Every time it changes, player receives new taxes from controlled planets. */
 	UPROPERTY(SaveGame, VisibleAnywhere, BlueprintReadOnly, Category = "GameTime")
 	int32 CurrentDay;
