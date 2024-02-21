@@ -97,6 +97,11 @@ void AStarSystem::InitializeStarSystem()
 	}
 }
 
+FGameplayTag AStarSystem::GetStarSystemTag() const
+{
+	return StarSystemData->Tag;
+}
+
 void AStarSystem::SelectObject_Implementation()
 {
 	SelectionComponent->SetOwnerSelected(true);

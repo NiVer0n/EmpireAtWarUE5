@@ -5,5 +5,6 @@
 
 DEFINE_LOG_CATEGORY(LogStarSystem);
 DEFINE_LOG_CATEGORY(LogUniverseSubsystem);
+DEFINE_LOG_CATEGORY(LogTradeRoute);
 
 IMPLEMENT_PRIMARY_GAME_MODULE(FEmpireAtWarUE5GameModule, EmpireAtWarUE5, "EmpireAtWarUE5");

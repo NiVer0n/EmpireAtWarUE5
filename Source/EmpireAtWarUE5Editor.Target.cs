@@ -7,6 +7,7 @@ public class EmpireAtWarUE5EditorTarget : TargetRules
 {
 	public EmpireAtWarUE5EditorTarget( TargetInfo Target) : base(Target)
 	{
+		IncludeOrderVersion = EngineIncludeOrderVersion.Latest;
 		Type = TargetType.Editor;
 		DefaultBuildSettings = BuildSettingsVersion.V2;
 		ExtraModuleNames.AddRange( new string[] { "EmpireAtWarUE5" } );

@@ -15,7 +15,7 @@ UMinimapWidget::UMinimapWidget(const FObjectInitializer& ObjectInitializer)
 	, bCaptureMinimapBackFromLevel(true)
 	, MinimapSize(FVector2D())
 	, LevelSize(FVector2D())
-	, MinimapZoomRatio(2.5f)
+	, MinimapZoomRatio(2.0f)
 {
 }
 

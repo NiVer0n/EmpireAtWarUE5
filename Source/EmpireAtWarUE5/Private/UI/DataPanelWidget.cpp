@@ -52,7 +52,7 @@ void UDataPanelWidget::HandleBindings(bool InBinded)
 		ResourceSubsystem->OnResourcesChanged.AddUniqueDynamic(this, &ThisClass::RefreshResourceData);
 		GalaxyTimeSubsystem->OnGalaxyTimeChanged.AddUniqueDynamic(this, &ThisClass::UpdateCurrentDayProgressBar);
 		GalaxyTimeSubsystem->OnGalaxyDayChanged.AddUniqueDynamic(this, &ThisClass::UpdateCurrentDayText);
-		EAWPlayerController->OnActorSelected.AddUniqueDynamic(this, &ThisClass::UpdateSelectedActorInfo);
+		EAWPlayerController->OnActorSelected.AddUniqueDynamic(this, &ThisClass::UpdateSelectedStarSystemInfo);
 		EAWPlayerState->OnControlledSystemsChanged.AddUniqueDynamic(this, &ThisClass::UpdateTaxCountText);
 		PauseGameButton->OnClicked.AddUniqueDynamic(this, &ThisClass::OnPauseGameButtonPressed);
 		SpeedUpTimeButton->OnClicked.AddUniqueDynamic(this, &ThisClass::OnSpeedUpTimeButtonPressed);
@@ -62,7 +62,7 @@ void UDataPanelWidget::HandleBindings(bool InBinded)
 		ResourceSubsystem->OnResourcesChanged.RemoveDynamic(this, &ThisClass::RefreshResourceData);
 		GalaxyTimeSubsystem->OnGalaxyTimeChanged.RemoveDynamic(this, &ThisClass::UpdateCurrentDayProgressBar);
 		GalaxyTimeSubsystem->OnGalaxyDayChanged.RemoveDynamic(this, &ThisClass::UpdateCurrentDayText);
-		EAWPlayerController->OnActorSelected.RemoveDynamic(this, &ThisClass::UpdateSelectedActorInfo);
+		EAWPlayerController->OnActorSelected.RemoveDynamic(this, &ThisClass::UpdateSelectedStarSystemInfo);
 		EAWPlayerState->OnControlledSystemsChanged.RemoveDynamic(this, &ThisClass::UpdateTaxCountText);
 		PauseGameButton->OnClicked.RemoveDynamic(this, &ThisClass::OnPauseGameButtonPressed);
 		SpeedUpTimeButton->OnClicked.RemoveDynamic(this, &ThisClass::OnSpeedUpTimeButtonPressed);
@@ -126,17 +126,12 @@ void UDataPanelWidget::UpdateCurrentDayText(int32 InDay)
 	CurrentDayText->SetText(FText::AsNumber(InDay));
 }
 
-void UDataPanelWidget::UpdateSelectedActorInfo(const AActor* SelectedActor)
+void UDataPanelWidget::UpdateSelectedStarSystemInfo(const AActor* SelectedActor)
 {
-	const bool ActorSelected = IsValid(SelectedActor);
-	SelectedSystemTaxCountText->SetVisibility(ActorSelected ? ESlateVisibility::Visible : ESlateVisibility::Hidden);
-	SelectedSystemNameText->SetVisibility(ActorSelected ? ESlateVisibility::Visible : ESlateVisibility::Hidden);
-	if (!ActorSelected)
-	{
-		return;
-	}
-
 	const AStarSystem* StarSystem = Cast<AStarSystem>(SelectedActor);
+	SelectedSystemTaxCountText->SetVisibility(IsValid(StarSystem) ? ESlateVisibility::Visible : ESlateVisibility::Hidden);
+	SelectedSystemNameText->SetVisibility(IsValid(StarSystem) ? ESlateVisibility::Visible : ESlateVisibility::Hidden);
+
 	if (!IsValid(StarSystem))
 	{
 		return;

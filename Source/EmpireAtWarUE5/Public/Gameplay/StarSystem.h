@@ -27,6 +27,7 @@ class EMPIREATWARUE5_API AStarSystem : public AActor, public ISelectable, public
 
 public:
 	FORCEINLINE UDA_StarSystem* GetStarSystemData() const { return StarSystemData; }
+	FORCEINLINE FGameplayTag GetStarSystemTag() const;
 
 	virtual void SelectObject_Implementation() override;
 	virtual void DeselectObject_Implementation() override;

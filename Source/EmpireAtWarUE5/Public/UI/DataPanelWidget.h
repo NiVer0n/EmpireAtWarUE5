@@ -64,7 +64,7 @@ private:
 	void UpdateCurrentDayText(int32 InDay);
 
 	UFUNCTION()
-	void UpdateSelectedActorInfo(const AActor* SelectedActor);
+	void UpdateSelectedStarSystemInfo(const AActor* SelectedActor);
 
 	UFUNCTION()
 	void UpdateTaxCountText();

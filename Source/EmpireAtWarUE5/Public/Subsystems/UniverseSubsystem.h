@@ -7,6 +7,11 @@
 #include "GameplayTagContainer.h"
 #include "UniverseSubsystem.generated.h"
 
+class UDataTable;
+class UDA_StarSystem;
+class AStarSystem;
+class ATradeRoute;
+
 /**
  * Class for storing and manipulating all star systems represented in galaxy mode.
  */
@@ -20,18 +25,19 @@ protected:
 
 	virtual void OnWorldBeginPlay(UWorld& InWorld) override;
 
-private:
-	void InitializeCampaignPlanetsList();
+	void CollectCampaignPlanets();
+
+	void CollectTradeRoutes();
 
 	UPROPERTY()
-	TMap<FGameplayTag, class AStarSystem*> UniverseMap;
+	TMap<FGameplayTag, AStarSystem*> UniverseMap;
 
 	UPROPERTY()
-	class UDataTable* CampaignDataTable;
+	TArray<ATradeRoute*> TradeRoutes;
 
 	UPROPERTY()
-	TSubclassOf<AStarSystem> StarSystemClass;
+	UDataTable* CampaignDataTable;
 
 	UPROPERTY()
-	TMap<FGameplayTag, class UDA_StarSystem*> UniverseData;
+	TMap<FGameplayTag, UDA_StarSystem*> UniverseData;
 };
