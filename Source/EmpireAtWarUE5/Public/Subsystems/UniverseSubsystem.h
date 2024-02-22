@@ -30,14 +30,14 @@ protected:
 	void CollectTradeRoutes();
 
 	UPROPERTY()
-	TMap<FGameplayTag, AStarSystem*> UniverseMap;
+	TMap<FGameplayTag, TObjectPtr<AStarSystem>> UniverseMap;
 
 	UPROPERTY()
-	TArray<ATradeRoute*> TradeRoutes;
+	TArray<TObjectPtr<ATradeRoute>> TradeRoutes;
 
 	UPROPERTY()
-	UDataTable* CampaignDataTable;
+	TObjectPtr<UDataTable> CampaignDataTable;
 
 	UPROPERTY()
-	TMap<FGameplayTag, UDA_StarSystem*> UniverseData;
+	TMap<FGameplayTag, TObjectPtr<UDA_StarSystem>> UniverseData;
 };

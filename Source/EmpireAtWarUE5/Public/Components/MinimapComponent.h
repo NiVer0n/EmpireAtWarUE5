@@ -22,20 +22,20 @@ protected:
 	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 
 	UPROPERTY()
-	class UMinimapWidget* MinimapWidget;
+	TObjectPtr<class UMinimapWidget> MinimapWidget;
 
 	UPROPERTY()
-	class UMinimapObjectWidget* PinnedMinimapObjectWidget;
+	TObjectPtr<class UMinimapObjectWidget> PinnedMinimapObjectWidget;
 
 	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category = "MinimapSettings")
-	class UTexture2D* MinimapIconTexture;
+	TObjectPtr<class UTexture2D> MinimapIconTexture;
 
 	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category = "MinimapSettings")
-	class UMaterial* MinimapIconMaterial;
+	TObjectPtr<class UMaterial> MinimapIconMaterial;
 
 private:
 	void CreateMinimapWidget();
 
 	UPROPERTY()
-	UMaterialInstanceDynamic* MinimapIconMaterialInstance;
+	TObjectPtr<UMaterialInstanceDynamic> MinimapIconMaterialInstance;
 };

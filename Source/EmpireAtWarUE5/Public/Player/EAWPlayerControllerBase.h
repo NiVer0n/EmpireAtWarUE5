@@ -54,10 +54,10 @@ protected:
 	bool TrySelectActor();
 
 	UPROPERTY(Transient)
-	AEAWPlayerPawnBase* PlayerPawn;
+	TObjectPtr<AEAWPlayerPawnBase> PlayerPawn;
 
 	UPROPERTY()
-	TArray<AActor*> SelectedActors;
+	TArray<TObjectPtr<AActor>> SelectedActors;
 
 private:
 	void AddSelectedActorToList(AActor* SelectedActor);

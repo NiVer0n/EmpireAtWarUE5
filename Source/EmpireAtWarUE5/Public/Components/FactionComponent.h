@@ -39,5 +39,5 @@ protected:
 
 private:
 	UPROPERTY()
-	UDA_Factions* FactionsDataAsset;
+	TObjectPtr<UDA_Factions> FactionsDataAsset;
 };

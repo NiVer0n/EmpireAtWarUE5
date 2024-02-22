@@ -28,5 +28,5 @@ protected:
 	virtual void BeginPlay() override;
 
 	UPROPERTY()
-	UNameWidget* NameWidget;
+	TObjectPtr<UNameWidget> NameWidget;
 };

@@ -14,7 +14,7 @@ class EMPIREATWARUE5_API UNameWidget : public UUserWidget
 
 protected:
 	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
-	UTextBlock* TextBlock;
+	TObjectPtr<UTextBlock> TextBlock;
 
 	friend class UNameComponent;
 };

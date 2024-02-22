@@ -250,10 +250,10 @@ protected:
 	bool GetIsPermittedLocation(const FVector InLocation) const;
 
 	UPROPERTY(VisibleAnywhere, Category = "Components")
-	USpringArmComponent* SpringArm;
+	TObjectPtr<USpringArmComponent> SpringArm;
 
 	UPROPERTY(VisibleAnywhere, Category = "Components")
-	UCameraComponent* PawnCamera;
+	TObjectPtr<UCameraComponent> PawnCamera;
 
 	/* Whether should camera override its starting location. */
 	UPROPERTY(SaveGame, BlueprintReadWrite, EditAnywhere, Category = "Camera Settings|Starting Position")
@@ -345,7 +345,7 @@ protected:
 
 	/* Curve used in TravelToLocation. */
 	UPROPERTY(SaveGame, BlueprintReadWrite, EditDefaultsOnly, Category = "Camera Settings|Travel")
-	UCurveFloat* TravelCurve;
+	TObjectPtr<UCurveFloat> TravelCurve;
 
 	/* Utility variable to store time passed from beginning of the task. */
 	UPROPERTY(BlueprintReadOnly, Category = "Camera Settings|Travel")
@@ -373,7 +373,7 @@ protected:
 
 	/* Volume for assigning level boundaries. */
 	UPROPERTY(BlueprintReadOnly, Category = "Camera Settings|Restrictions")
-	ACameraBoundsVolume* CameraBoundsVolume;
+	TObjectPtr<ACameraBoundsVolume> CameraBoundsVolume;
 
 	/* Whether should constrain yaw value change. */
 	UPROPERTY(SaveGame, BlueprintReadWrite, EditDefaultsOnly, Category = "Camera Settings|Restrictions")

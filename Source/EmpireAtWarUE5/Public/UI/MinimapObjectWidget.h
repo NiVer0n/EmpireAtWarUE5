@@ -27,10 +27,10 @@ protected:
 	virtual void NativeConstruct() override;
 
 	UPROPERTY(BlueprintReadOnly, Category = "References", meta = (BindWidget))
-	UOverlay* MinimapIconContainer;
+	TObjectPtr<UOverlay> MinimapIconContainer;
 
 	UPROPERTY(BlueprintReadOnly, Category = "References", meta = (BindWidget))
-	UImage* MinimapIconImage;
+	TObjectPtr<UImage> MinimapIconImage;
 
 	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category = "MinimapSettings")
 	FVector2D IconSize;

@@ -46,26 +46,26 @@ protected:
 	void InitializeStarSystem();
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
-	USphereComponent* SphereComponent;
+	TObjectPtr<USphereComponent> SphereComponent;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
-	UStaticMeshComponent* MeshComponent;
+	TObjectPtr<UStaticMeshComponent> MeshComponent;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
-	USelectionComponent* SelectionComponent;
+	TObjectPtr<USelectionComponent> SelectionComponent;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
-	UNameComponent* NameComponent;
+	TObjectPtr<UNameComponent> NameComponent;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
-	UFactionComponent* FactionComponent;
+	TObjectPtr<UFactionComponent> FactionComponent;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
-	UMinimapComponent* MinimapComponent;
+	TObjectPtr<UMinimapComponent> MinimapComponent;
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
-	UStarbaseComponent* StarbaseComponent;
+	TObjectPtr<UStarbaseComponent> StarbaseComponent;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "GameplayData")
-	UDA_StarSystem* StarSystemData;
+	TObjectPtr<UDA_StarSystem> StarSystemData;
 };

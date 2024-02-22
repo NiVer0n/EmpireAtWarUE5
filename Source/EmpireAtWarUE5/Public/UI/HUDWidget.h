@@ -18,7 +18,7 @@ class EMPIREATWARUE5_API UHUDWidget : public UUserWidget
 
 protected:
 	UPROPERTY(BlueprintReadOnly, Category = "References", meta = (BindWidget))
-	class UCanvasPanel* CanvasPanel;
+	TObjectPtr<class UCanvasPanel> CanvasPanel;
 
 public:
 	UUserWidget* CreateWidgetAtSuitablePoint(const TSoftClassPtr<UUserWidget> WidgetClass, const FGameplayTag WidgetPointTag);

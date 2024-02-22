@@ -24,10 +24,10 @@ protected:
 	virtual void NativeConstruct() override;
 
 	UPROPERTY(BlueprintReadOnly, Category = "References", meta = (BindWidget))
-	UImage* MinimapImage;
+	TObjectPtr<UImage> MinimapImage;
 
 	UPROPERTY(BlueprintReadOnly, Category = "References", meta = (BindWidget))
-	UOverlay* MinimapContainer;
+	TObjectPtr<UOverlay> MinimapContainer;
 
 	UPROPERTY(BlueprintReadOnly, EditDefaultsOnly, Category = "MinimapSettings")
 	TSubclassOf<UMinimapObjectWidget> MinimapObjectWidgetClass;

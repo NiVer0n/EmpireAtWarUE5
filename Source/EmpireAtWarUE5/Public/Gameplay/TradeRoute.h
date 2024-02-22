@@ -52,10 +52,10 @@ public:
 
 protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
-	USceneComponent* Root;
+	TObjectPtr<USceneComponent> Root;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Components")
-	USplineComponent* RouteSpline;
+	TObjectPtr<USplineComponent> RouteSpline;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "TradeRoute|Settings")
 	TSoftObjectPtr<AStarSystem> StartStarSystem;

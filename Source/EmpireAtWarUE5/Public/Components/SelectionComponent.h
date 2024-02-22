@@ -29,16 +29,16 @@ protected:
 	USelectionComponent();
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
-	UStaticMeshComponent* PlaneComponent;
+	TObjectPtr<UStaticMeshComponent> PlaneComponent;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Selection Settings")
-	UStaticMesh* PlaneMesh;
+	TObjectPtr<UStaticMesh> PlaneMesh;
 
 	UPROPERTY(EditAnywhere, Category = "Selection Settings")
-	UMaterialInterface* SelectionMaterial;
+	TObjectPtr<UMaterialInterface> SelectionMaterial;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Selection Settings")
-	USoundCue* SelectedSound;
+	TObjectPtr<USoundCue> SelectedSound;
 
 private:
 	UPROPERTY()
@@ -51,5 +51,5 @@ private:
 	bool bHovered;
 
 	UPROPERTY()
-	UMaterialInstanceDynamic* SelectionMaterialInstance;
+	TObjectPtr<UMaterialInstanceDynamic> SelectionMaterialInstance;
 };

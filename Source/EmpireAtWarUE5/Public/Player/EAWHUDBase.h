@@ -16,7 +16,7 @@ class EMPIREATWARUE5_API AEAWHUDBase : public AHUD
 	GENERATED_BODY()
 
 public:
-	FORCEINLINE const TMap<FGameplayTag, UUserWidget*>& GetCreatedWidgets() const { return CreatedWidgets; }
+	FORCEINLINE const TMap<FGameplayTag, TObjectPtr<UUserWidget>>& GetCreatedWidgets() const { return CreatedWidgets; }
 
 	template <typename WidgetT = UUserWidget>
 	WidgetT* GetDesiredWidget(const FGameplayTag DesiredWidgetTag)
@@ -42,8 +42,8 @@ protected:
 	TSubclassOf<UHUDWidget> HUDWidgetClass;
 
 	UPROPERTY(Transient)
-	UHUDWidget* HUDWidget;
+	TObjectPtr<UHUDWidget> HUDWidget;
 
 	UPROPERTY()
-	TMap<FGameplayTag, UUserWidget*> CreatedWidgets;
+	TMap<FGameplayTag, TObjectPtr<UUserWidget>> CreatedWidgets;
 };

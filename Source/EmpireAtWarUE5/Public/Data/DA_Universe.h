@@ -19,5 +19,5 @@ class EMPIREATWARUE5_API UDA_Universe : public UDataAsset
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "StarSystemsData", meta = (Categories = "Gameplay.StarSystems"))
-	TMap<FGameplayTag, UDA_StarSystem*> StarSystemsData;
+	TMap<FGameplayTag, TObjectPtr<UDA_StarSystem>> StarSystemsData;
 };

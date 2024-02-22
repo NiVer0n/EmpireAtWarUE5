@@ -25,5 +25,5 @@ private:
 	AEAWPlayerControllerGalaxy();
 
 	UPROPERTY(Transient)
-	AActor* CachedSelectedActor;
+	TObjectPtr<AActor> CachedSelectedActor;
 };

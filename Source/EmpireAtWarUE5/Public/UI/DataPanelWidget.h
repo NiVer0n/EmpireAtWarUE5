@@ -25,31 +25,31 @@ protected:
 	virtual void NativeDestruct() override;
 
 	UPROPERTY(BlueprintReadOnly, Category = "References", meta = (BindWidget))
-	UTextBlock* CreditsCountText;
+	TObjectPtr<UTextBlock> CreditsCountText;
 
 	UPROPERTY(BlueprintReadOnly, Category = "References", meta = (BindWidget))
-	UTextBlock* TaxCountText;
+	TObjectPtr<UTextBlock> TaxCountText;
 
 	UPROPERTY(BlueprintReadOnly, Category = "References", meta = (BindWidget))
-	UTextBlock* SelectedSystemTaxCountText;
+	TObjectPtr<UTextBlock> SelectedSystemTaxCountText;
 
 	UPROPERTY(BlueprintReadOnly, Category = "References", meta = (BindWidget))
-	UTextBlock* SelectedSystemNameText;
+	TObjectPtr<UTextBlock> SelectedSystemNameText;
 
 	UPROPERTY(BlueprintReadOnly, Category = "References", meta = (BindWidget))
-	UTextBlock* PopulationCountText;
+	TObjectPtr<UTextBlock> PopulationCountText;
 
 	UPROPERTY(BlueprintReadOnly, Category = "References", meta = (BindWidget))
-	UProgressBar* PB_CurrentDay;
+	TObjectPtr<UProgressBar> PB_CurrentDay;
 
 	UPROPERTY(BlueprintReadOnly, Category = "References", meta = (BindWidget))
-	UTextBlock* CurrentDayText;
+	TObjectPtr<UTextBlock> CurrentDayText;
 
 	UPROPERTY(BlueprintReadOnly, Category = "References", meta = (BindWidget))
-	UButton* PauseGameButton;
+	TObjectPtr<UButton> PauseGameButton;
 
 	UPROPERTY(BlueprintReadOnly, Category = "References", meta = (BindWidget))
-	UButton* SpeedUpTimeButton;
+	TObjectPtr<UButton> SpeedUpTimeButton;
 
 private:
 	void HandleBindings(bool InBinded);

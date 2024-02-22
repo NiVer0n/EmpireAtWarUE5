@@ -59,10 +59,10 @@ protected:
 	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
-	UFactionComponent* FactionComponent;
+	TObjectPtr<UFactionComponent> FactionComponent;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Gameplay")
-	TArray<AStarSystem*> ControlledStarSystems;
+	TArray<TObjectPtr<AStarSystem>> ControlledStarSystems;
 
 private:
 	UFUNCTION()

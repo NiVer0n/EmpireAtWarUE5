@@ -21,7 +21,7 @@ struct FTaggedInputAction
 
 public:
 	UPROPERTY(EditDefaultsOnly)
-	const UInputAction* InputAction;
+	TObjectPtr<const UInputAction> InputAction;
 
 	UPROPERTY(EditDefaultsOnly, Meta = (Categories = "InputTag"))
 	FGameplayTag InputTag;
@@ -47,5 +47,5 @@ protected:
 	TArray<FTaggedInputAction> TaggedInputActions;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-	UInputMappingContext* MappingContext;
+	TObjectPtr<UInputMappingContext> MappingContext;
 };
